@@ -123,6 +123,7 @@ namespace WindowsFormsApplication1
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            //Take attendance
             if (tabControl1.SelectedTab == tabControl1.TabPages["tabPage2"])
             {
                 grabber = new Capture();
@@ -134,6 +135,7 @@ namespace WindowsFormsApplication1
                 if(grabber !=null)
                     grabber.Dispose();
             }
+            //open session
             if (tabControl1.SelectedTab == tabControl1.TabPages["tabPage4"])
             {
                 SqlConnection con = new SqlConnection(cs.DBConn);
@@ -180,7 +182,42 @@ namespace WindowsFormsApplication1
                 
 
             }
+            //view attendance tab
+            if (tabControl1.SelectedTab == tabControl1.TabPages["tabPage5"])
+            {
+                //load attendance 
+                SqlConnection con = new SqlConnection(cs.DBConn);
+                SqlCommand cmd = null;
+                con.Open();
+                string cmdString = "select isnull(Attendance.Id,-1)as id,ClassSchedule.[index],ClassSchedule.startDate,Student.MatriCardNo,Student.Name,ISNULL(Attendance.[Status],'Absence') as 'Status',isnull(Attendance.Photo,'Absence') as Photo from student inner join StudentClassEnroll on StudentClassEnroll.MatriCardNo = student.MatriCardNo inner join ClassSchedule on ClassSchedule.[index]=StudentClassEnroll.[index] left join Attendance on  ClassSchedule.id=Attendance.ClassScheduleID and Attendance.MatriCard=Student.MatriCardNo order by ClassSchedule.[index],startDate,student.MatriCardNo";
+                cmd = new SqlCommand(cmdString);
+                cmd.Connection = con;
+                SqlDataReader reader = cmd.ExecuteReader();
+                DataTable dt = null;
+                if (reader.HasRows)
+                {
+                    dt = new DataTable();
+                    dt.Load(reader);
+                    dataGridView3.DataSource = dt;
+                    dataGridView3.Columns["id"].Visible = false;
+                    dataGridView3.Columns["Photo"].Visible = false;
+                    DataGridViewButtonColumn btn = new DataGridViewButtonColumn();
+                    dataGridView3.Columns.Add(btn);
+                    btn.HeaderText = "Photo";
+                    btn.Text = "View Photo";
+                    btn.Name = "btn";
+                    btn.UseColumnTextForButtonValue = true;
+
+                }
+                else
+                {
+                    dataGridView3.DataSource = dt;
+                }
+                con.Close();
+            }
         }
+
+
         public Image<Gray, Byte> convertImagetoImageGRAYBYTE(Image img) {
             Bitmap masterImage = (Bitmap)img;
             Image<Gray, Byte> normalizedMasterImage = new Image<Gray, Byte>(masterImage);
@@ -364,9 +401,10 @@ namespace WindowsFormsApplication1
 
             
         }
-
+        int counter = 0;
         private void button2_Click_1(object sender, EventArgs e)
         {
+            
             Image image = grabber.QueryFrame().Bitmap;
             Image<Gray, byte> ScreenCapture = grabber.QueryGrayFrame().Resize(320, 240, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
             MCvAvgComp[][] facesDetected = ScreenCapture.DetectHaarCascade(
@@ -395,7 +433,8 @@ namespace WindowsFormsApplication1
                 SqlConnection con = new SqlConnection(cs.DBConn);
                 SqlCommand cmd = null;
                 con.Open();
-                string cmdString = "select ClassSchedule.id from Student  inner join StudentClassEnroll  on Student.MatriCardNo = StudentClassEnroll.MatriCardNo inner join ClassSchedule on ClassSchedule.[index] = StudentClassEnroll.[index] where Status='Open'  and Student.MatriCardNo='UC123456C'";
+                string cmdString = "select ClassSchedule.id from Student  inner join StudentClassEnroll  on Student.MatriCardNo = StudentClassEnroll.MatriCardNo inner join ClassSchedule on ClassSchedule.[index] = StudentClassEnroll.[index] where Status='Open'  and Student.MatriCardNo=@mc";
+                cmd.Parameters.AddWithValue("@mc", message);
                 cmd = new SqlCommand(cmdString);
                 cmd.Connection = con;
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -424,11 +463,125 @@ namespace WindowsFormsApplication1
                     cmd.ExecuteReader();
 
                 }
-                else {
+                else
+                {
                     MessageBox.Show("Class has ended or class session not opened yet!", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 con.Close();
             }
+            else {
+                if (counter == 3)
+                {
+                    counter = 0;
+                    ShowMyDialogBox();
+                    if (message != "" && message != "Cancelled")
+                    {
+                        SqlConnection con = new SqlConnection(cs.DBConn);
+                        SqlCommand cmd = null;
+                        con.Open();
+                        string cmdString = "select ClassSchedule.id from Student  inner join StudentClassEnroll  on Student.MatriCardNo = StudentClassEnroll.MatriCardNo inner join ClassSchedule on ClassSchedule.[index] = StudentClassEnroll.[index] where Status='Open'  and Student.MatriCardNo=@mc";
+                        cmd = new SqlCommand(cmdString);
+                        cmd.Parameters.AddWithValue("@mc", message);
+                        cmd.Connection = con;
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        int classindex = -1;
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                classindex = reader.GetInt32(0);
+                            }
+                            reader.Close();
+                            cmd = null;
+                            cmdString = "insert into Attendance(ClassScheduleID,MatriCard,Photo,Status) VALUES (@ClassScheduleID,@MatriCard,@Photo,@Status)";
+                            cmd = new SqlCommand(cmdString);
+                            cmd.Connection = con;
+                            cmd.Parameters.AddWithValue("@ClassScheduleID", classindex);
+                            cmd.Parameters.AddWithValue("@MatriCard", name);
+                            cmd.Parameters.AddWithValue("@Status", "Present");
+                            SqlParameter p = new SqlParameter("@Photo", SqlDbType.Image);
+                            MemoryStream ms = new MemoryStream();
+                            Bitmap bmpImage = new Bitmap(image);
+                            bmpImage.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                            byte[] data = ms.GetBuffer();
+                            p.Value = data;
+                            cmd.Parameters.Add(p);
+                            cmd.ExecuteReader();
+
+                        }
+                        else
+                        {
+                            MessageBox.Show("Class has ended or class session not opened yet!", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                        con.Close();
+
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Unable to detect your face, Please try again!", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    counter++;
+                }
+                
+            }
+        }
+        string message = "";
+        public void ShowMyDialogBox()
+        {
+            input testDialog = new input();
+            DialogResult dr = testDialog.ShowDialog(this);
+
+            // Show testDialog as a modal dialog and determine if DialogResult = OK.
+            if (dr == DialogResult.Yes)
+            {
+                // Read the contents of testDialog's TextBox.
+                message = testDialog.textBox1.Text;
+            }
+            else
+            {
+                message = "Cancelled";
+            }
+            testDialog.Dispose();
+        }
+        Image pictureToDisplay = null;
+        private void dataGridView3_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 7)
+            {
+                //get ID of the select row
+                int id = (int)dataGridView3.CurrentRow.Cells[0].Value;
+                if (id == -1)
+                    return;
+                //display the picture
+                SqlConnection con = new SqlConnection(cs.DBConn);
+                SqlCommand cmd = null;
+                con.Open();
+                string cmdString = "select Photo from Attendance where id=@id";
+                cmd = new SqlCommand(cmdString);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Connection = con;
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows) {
+                    while (reader.Read()) {
+                        byte[] photo = (byte[])reader[0];
+                        pictureToDisplay = byteArrayToImage(photo);
+                        Image image = ResizeImage(pictureToDisplay, 333, 249);
+                        picturebox frm2 = new picturebox();
+                        frm2.pictureBox1.Image = image;
+                        frm2.Show(); 
+                    }
+                }
+
+            }
+        }
+        public Image byteArrayToImage(byte[] bytesArr)
+        {
+            using (MemoryStream memstr = new MemoryStream(bytesArr))
+            {
+                Image img = Image.FromStream(memstr);
+                return img;
+            }
         }
     }
+    
 }

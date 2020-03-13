@@ -17,3 +17,5 @@ C:\Users\Desmond95\Desktop\NTU\Sem4\ASE\ASE\Main\WindowsFormsApplication1\Window
 C:\Users\Desmond95\Desktop\NTU\Sem4\ASE\ASE\Main\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
 C:\Users\Desmond95\Desktop\NTU\Sem4\ASE\ASE\Main\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
 C:\Users\Desmond95\Desktop\NTU\Sem4\ASE\ASE\Main\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+C:\Users\Desmond95\Desktop\NTU\Sem4\ASE\ASE\Main\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.input.resources
+C:\Users\Desmond95\Desktop\NTU\Sem4\ASE\ASE\Main\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.picturebox.resources
