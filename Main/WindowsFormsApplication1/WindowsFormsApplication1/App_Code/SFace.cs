@@ -14,9 +14,16 @@ namespace WindowsFormsApplication1.App_Code
     {
         ConnectionString cs = new ConnectionString();
 
-        public Bitmap Image { get; set; }
+        public Image Image { get; set; }
         public string matriNo { get; set; }
+        public string name { get; set; }
 
+        public SFace() { }
+        public SFace(Image Image, string mc, string name) {
+            this.Image = Image;
+            this.matriNo = mc;
+            this.name = name;
+        }
         public void uploadStudentFace(Image i, string matriNumber){
             SqlConnection con = new SqlConnection(cs.DBConn);
             SqlCommand cmd = null;
@@ -35,7 +42,6 @@ namespace WindowsFormsApplication1.App_Code
             cmd.Parameters.Add(p);
             cmd.ExecuteReader();
             con.Close();
-
         }
 
     }
