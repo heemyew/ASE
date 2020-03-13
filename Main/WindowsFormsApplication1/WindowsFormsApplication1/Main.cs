@@ -131,25 +131,53 @@ namespace WindowsFormsApplication1
             }
             else {
                 Application.Idle -= new EventHandler(FrameGrabber);
-                grabber.Dispose();
+                if(grabber !=null)
+                    grabber.Dispose();
             }
             if (tabControl1.SelectedTab == tabControl1.TabPages["tabPage4"])
             {
                 SqlConnection con = new SqlConnection(cs.DBConn);
                 SqlCommand cmd = null;
                 con.Open();
-                string cmdString = "select * from ClassSchedule";
+                string cmdString = "select * from ClassSchedule where Status='Closed' and day(startDate)=day(GETDATE()) and  month(startDate)=month(GETDATE()) and year(startDate)=year(GETDATE())";
                 cmd = new SqlCommand(cmdString);
                 cmd.Connection = con;
                 SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.HasRows) {
-                    DataTable dt = new DataTable();
+                DataTable dt = null;
+                if (reader.HasRows)
+                {
+                    dt = new DataTable();
                     dt.Load(reader);
                     dataGridView1.DataSource = dt;
+                    dataGridView1.Columns["id"].Visible = false;
+                }
+                else
+                {
+                    dataGridView1.DataSource = dt;
+                }
+                
+                reader.Close();
+
+                cmd = null;
+                cmdString = "select * from ClassSchedule where Status='Open' ";
+                cmd = new SqlCommand(cmdString);
+                cmd.Connection = con;
+                SqlDataReader reader1 = cmd.ExecuteReader();
+                DataTable dt2 = null;
+                if (reader1.HasRows)
+                {
+                    dt2 = new DataTable();
+                    dt2.Load(reader1);
+                    dataGridView2.DataSource = dt2;
+                    dataGridView2.Columns["id"].Visible = false;
 
                 }
+                else
+                {
+                    dataGridView2.DataSource = dt2;
+                }
                 con.Close();
-                dataGridView1.Columns["id"].Visible = false;
+                
 
             }
         }
@@ -266,11 +294,80 @@ namespace WindowsFormsApplication1
 
         private void button5_Click(object sender, EventArgs e)
         {
-            label6.Text = dataGridView1.CurrentRow.Cells[0].Value.ToString();
+            int index = (int)dataGridView1.CurrentRow.Cells[0].Value;
+            DateTime startDate = (DateTime)dataGridView1.CurrentRow.Cells[2].Value;
+            DateTime endDate = (DateTime)dataGridView1.CurrentRow.Cells[3].Value;
+            DateTime currentTime = DateTime.Now;
+            //DateTime.Now.ToString(@"MM\/dd\/yyyy h\:mm tt");
+
+            DateTime span = startDate.AddMinutes(-30);
+            if (currentTime >= span && currentTime <= endDate)
+            {
+                SqlConnection con = new SqlConnection(cs.DBConn);
+                SqlCommand cmd = null;
+                con.Open();
+                string cmdString = "update ClassSchedule set Status='Open' where id = @id";
+                cmd = new SqlCommand(cmdString);
+                cmd.Parameters.AddWithValue("@id", index);
+                cmd.Connection = con;
+                SqlDataReader reader = cmd.ExecuteReader();
+                reader.Close();
+
+                SqlCommand cmd1 = new SqlCommand();
+                string cmdString1 = "select * from ClassSchedule where Status='Closed'  and day(startDate)=day(GETDATE()) and  month(startDate)=month(GETDATE()) and year(startDate)=year(GETDATE())";
+                cmd1 = new SqlCommand(cmdString1);
+                cmd1.Connection = con;
+                SqlDataReader reader1 = cmd1.ExecuteReader();
+                DataTable dt = null;
+                if (reader1.HasRows)
+                {
+                    dt = new DataTable();
+                    dt.Load(reader1);
+                    dataGridView1.DataSource = dt;
+                    dataGridView1.Columns["id"].Visible = false;
+                }
+                else
+                {
+                    dataGridView1.DataSource = dt;
+                }
+                reader1.Close();
+
+                cmd1 = null;
+                cmdString1 = "select * from ClassSchedule where Status='Open'";
+                cmd1 = new SqlCommand(cmdString1);
+                cmd1.Connection = con;
+                SqlDataReader reader2 = cmd1.ExecuteReader();
+                DataTable dt2 = null;
+                if (reader2.HasRows)
+                {
+                    dt2 = new DataTable();
+                    dt2.Load(reader2);
+                    dataGridView2.DataSource = dt2;
+                    dataGridView2.Columns["id"].Visible = false;
+                }
+                else
+                {
+                    dataGridView2.DataSource = dt2;
+                }
+                con.Close();
+                
+            }
+            else {
+                if (currentTime < span)
+                    MessageBox.Show("Too early to open class session", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                else {
+                    MessageBox.Show("Class has ended", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            //Console.WriteLine( "Time Difference (minutes): " + span.TotalMinutes );
+
+
+            
         }
 
         private void button2_Click_1(object sender, EventArgs e)
         {
+            Image image = grabber.QueryFrame().Bitmap;
             Image<Gray, byte> ScreenCapture = grabber.QueryGrayFrame().Resize(320, 240, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
             MCvAvgComp[][] facesDetected = ScreenCapture.DetectHaarCascade(
                     face,
@@ -292,10 +389,46 @@ namespace WindowsFormsApplication1
                     name = recognizer.Recognize(result); // detected name of the face is been saved  to the 'name'-variable
                 }
             }
-            if (name !="")
-                MessageBox.Show(name+" Attendance Taken", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            if (name != "")
+            {
+                //MessageBox.Show(name + " Attendance Taken", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SqlConnection con = new SqlConnection(cs.DBConn);
+                SqlCommand cmd = null;
+                con.Open();
+                string cmdString = "select ClassSchedule.id from Student  inner join StudentClassEnroll  on Student.MatriCardNo = StudentClassEnroll.MatriCardNo inner join ClassSchedule on ClassSchedule.[index] = StudentClassEnroll.[index] where Status='Open'  and Student.MatriCardNo='UC123456C'";
+                cmd = new SqlCommand(cmdString);
+                cmd.Connection = con;
+                SqlDataReader reader = cmd.ExecuteReader();
+                int classindex = -1;
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        classindex = reader.GetInt32(0);
+                    }
+                    reader.Close();
+                    cmd = null;
+                    cmdString = "insert into Attendance(ClassScheduleID,MatriCard,Photo,Status) VALUES (@ClassScheduleID,@MatriCard,@Photo,@Status)";
+                    cmd = new SqlCommand(cmdString);
+                    cmd.Connection = con;
+                    cmd.Parameters.AddWithValue("@ClassScheduleID", classindex);
+                    cmd.Parameters.AddWithValue("@MatriCard", name);
+                    cmd.Parameters.AddWithValue("@Status", "Present");
+                    SqlParameter p = new SqlParameter("@Photo", SqlDbType.Image);
+                    MemoryStream ms = new MemoryStream();
+                    Bitmap bmpImage = new Bitmap(image);
+                    bmpImage.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    byte[] data = ms.GetBuffer();
+                    p.Value = data;
+                    cmd.Parameters.Add(p);
+                    cmd.ExecuteReader();
 
-
+                }
+                else {
+                    MessageBox.Show("Class has ended or class session not opened yet!", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                con.Close();
+            }
         }
     }
 }
