@@ -8,12 +8,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WindowsFormsApplication1.App_Code;
 
 namespace WindowsFormsApplication1
 {
     public partial class Login : Form
     {
         string selectedDomain;
+        ConnectionString cs = new ConnectionString();
+
         public Login()
         {
             InitializeComponent();
@@ -26,7 +29,7 @@ namespace WindowsFormsApplication1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            SqlConnection con = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Racheal\Desktop\Y2S2\ASE\ASE\Main\WindowsFormsApplication1\WindowsFormsApplication1\App_Data\attendance.mdf;Integrated Security=True");
+            SqlConnection con = new SqlConnection(cs.DBConn);
             SqlCommand cmd = new SqlCommand("select * from Account where emailAddress=@email and password=@password and domain=@domain", con);
             cmd.Parameters.AddWithValue("@email", textBox1.Text);
             cmd.Parameters.AddWithValue("@password", textBox2.Text);
@@ -46,8 +49,8 @@ namespace WindowsFormsApplication1
                 this.Hide();
                 if (selectedDomain == "Student")
                 {
-                    Main mainPage = new Main();
-                    mainPage.Show();
+                    TakeAttendace takeAtt = new TakeAttendace();
+                    takeAtt.Show();
                 }
                 else
                 {

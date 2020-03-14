@@ -20,12 +20,10 @@ namespace WindowsFormsApplication1
 {
     public partial class Main : Form
     {
-        Image<Bgr, Byte> currentFrame;
         Capture grabber;
-        HaarCascade face;
         MCvFont font = new MCvFont(FONT.CV_FONT_HERSHEY_TRIPLEX, 0.5d, 0.5d);
         Image<Gray, byte> result;
-        Image<Gray, byte> gray = null;
+        
         List<Image<Gray, byte>> trainingImages = new List<Image<Gray, byte>>();
         List<string> labels = new List<string>();
         List<string> NamePersons = new List<string>();
@@ -34,107 +32,17 @@ namespace WindowsFormsApplication1
         public static string name = "";
         public static string names = "";
         SFaceManager sfm = new SFaceManager();
+        ConnectionString cs = new ConnectionString();
 
 
         public Main()
         {
             InitializeComponent();
-            face = new HaarCascade("haarcascade_frontalface_default.xml");
-            retrain();
         }
-        public void FrameGrabber(object sender, EventArgs e)
-        {
-            //currentFrame = grabber.QueryFrame().Resize(320, 240, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
-            //imageBox1.Image = currentFrame;
-
-            label3.Text = "0";
-
-            NamePersons.Add("");
-
-
-            // capture a frame form  device both face and all things on the image
-            currentFrame = grabber.QueryFrame().Resize(320, 240, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
-
-
-            gray = currentFrame.Convert<Gray, Byte>();
-
-            //(TestImageBox.Image = currentFrame);
-
-            //Result of haarCascade will be on the "MCvAvgComp"-facedetected (is it face or not )
-            MCvAvgComp[][] facesDetected = gray.DetectHaarCascade(
-          face,
-          1.2,
-          10,
-          Emgu.CV.CvEnum.HAAR_DETECTION_TYPE.DO_CANNY_PRUNING,
-          new Size(20, 20));
-
-
-            foreach (MCvAvgComp f in facesDetected[0])
-            {
-                t = t + 1;
-                result = currentFrame.Copy(f.rect).Convert<Gray, byte>().Resize(100, 100, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
-
-                currentFrame.Draw(f.rect, new Bgr(Color.Red), 2); //Frame detect colour is 'read'
-
-
-                if (trainingImages.ToArray().Length != 0)
-                {
-                    MCvTermCriteria termCrit = new MCvTermCriteria(ContTrain, 0.001);
-
-
-                    EigenObjectRecognizer recognizer = new EigenObjectRecognizer(
-                       trainingImages.ToArray(),
-                       labels.ToArray(),
-                       3000,
-                       ref termCrit);
-
-                    name = recognizer.Recognize(result); // detected name of the face is been saved  to the 'name'-variable
-                    //the colour of  the face label name 
-                    currentFrame.Draw(name, ref font, new Point(f.rect.X - 2, f.rect.Y - 2), new Bgr(Color.LightGreen));
-
-                }
-
-                NamePersons[t - 1] = name;
-                NamePersons.Add("");
-            }
-            t = 0;
-
-
-            for (int nnn = 0; nnn < facesDetected[0].Length; nnn++)
-            {
-                names = names + NamePersons[nnn] + ", ";
-            }
-
-            imageBox1.Image = currentFrame;
-
-        }
-        public void retrain()
-        {
-            List<SFace> facelist = sfm.FaceList;
-            trainingImages.Clear();
-            labels.Clear();
-            foreach (SFace sface in facelist)
-            {
-                Image<Gray, byte> g = convertImagetoImageGRAYBYTE(sface.Image);
-                trainFace(g, sface.matriNo);
-            }
-        }
-        ConnectionString cs = new ConnectionString();
+        
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //Take attendance
-            if (tabControl1.SelectedTab == tabControl1.TabPages["tabPage2"])
-            {
-                grabber = new Capture();
-                grabber.QueryFrame();
-                Application.Idle += new EventHandler(FrameGrabber);
-            }
-            else {
-                Application.Idle -= new EventHandler(FrameGrabber);
-                if(grabber !=null)
-                    grabber.Dispose();
-            }
             //open session
             if (tabControl1.SelectedTab == tabControl1.TabPages["tabPage4"])
             {
@@ -157,7 +65,7 @@ namespace WindowsFormsApplication1
                 {
                     dataGridView1.DataSource = dt;
                 }
-                
+
                 reader.Close();
 
                 cmd = null;
@@ -179,7 +87,7 @@ namespace WindowsFormsApplication1
                     dataGridView2.DataSource = dt2;
                 }
                 con.Close();
-                
+
 
             }
             //view attendance tab
@@ -189,25 +97,30 @@ namespace WindowsFormsApplication1
                 SqlConnection con = new SqlConnection(cs.DBConn);
                 SqlCommand cmd = null;
                 con.Open();
-                string cmdString = "select isnull(Attendance.Id,-1)as id,ClassSchedule.[index],ClassSchedule.startDate,Student.MatriCardNo,Student.Name,ISNULL(Attendance.[Status],'Absence') as 'Status',isnull(Attendance.Photo,'Absence') as Photo from student inner join StudentClassEnroll on StudentClassEnroll.MatriCardNo = student.MatriCardNo inner join ClassSchedule on ClassSchedule.[index]=StudentClassEnroll.[index] left join Attendance on  ClassSchedule.id=Attendance.ClassScheduleID and Attendance.MatriCard=Student.MatriCardNo order by ClassSchedule.[index],startDate,student.MatriCardNo";
+                string cmdString = "select isnull(Attendance.Id,-1)as id,ClassSchedule.Id as ClassID,ClassSchedule.[index] as 'CourseCode',convert(varchar,ClassSchedule.startDate) as Date ,Student.MatriCardNo as 'Matriculation No',Student.Name,ISNULL(Attendance.[Status],'Absence') as 'Status',Attendance.Photo as Photo from student inner join StudentClassEnroll on StudentClassEnroll.MatriCardNo = student.MatriCardNo inner join ClassSchedule on ClassSchedule.[index]=StudentClassEnroll.[index] left join Attendance on  ClassSchedule.id=Attendance.ClassScheduleID and Attendance.MatriCard=Student.MatriCardNo order by ClassSchedule.[index],startDate,student.MatriCardNo";
                 cmd = new SqlCommand(cmdString);
                 cmd.Connection = con;
                 SqlDataReader reader = cmd.ExecuteReader();
                 DataTable dt = null;
                 if (reader.HasRows)
                 {
+                    dataGridView3.Columns.Clear();
                     dt = new DataTable();
                     dt.Load(reader);
+                    dt.Columns[3].ReadOnly = false;
+                    dt.Columns[0].ReadOnly = false;
                     dataGridView3.DataSource = dt;
                     dataGridView3.Columns["id"].Visible = false;
+                    dataGridView3.Columns["ClassID"].Visible = false;
                     dataGridView3.Columns["Photo"].Visible = false;
-                    DataGridViewButtonColumn btn = new DataGridViewButtonColumn();
+
+                    DataGridViewTextBoxColumn btn = new DataGridViewTextBoxColumn();
                     dataGridView3.Columns.Add(btn);
                     btn.HeaderText = "Photo";
-                    btn.Text = "View Photo";
                     btn.Name = "btn";
-                    btn.UseColumnTextForButtonValue = true;
+                    format();
 
+            
                 }
                 else
                 {
@@ -216,57 +129,63 @@ namespace WindowsFormsApplication1
                 con.Close();
             }
         }
+        public void format()
+        {
+            DataGridViewColumn column = dataGridView3.Columns[3];
+            column.Width = 230;
+            DataGridViewColumn columns = dataGridView3.Columns[2];
+            columns.Width = 70;
+            
+            foreach (DataGridViewColumn a in dataGridView3.Columns)
+            {
+                a.SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
+            foreach (DataGridViewColumn a in dataGridView3.Columns)
+            {
+                a.ReadOnly = true;
+            }
+            foreach (DataGridViewRow row in dataGridView3.Rows)
+            {
+                string date = row.Cells["Date"].Value.ToString();
+                DateTime datet = DateTime.Parse(date);
+                row.Cells[3].Value = datet.ToString("dddd, dd MMMM yyyy HH:mm tt");
 
+              
 
-        public Image<Gray, Byte> convertImagetoImageGRAYBYTE(Image img) {
+                if (((int)row.Cells[0].Value) != -1)
+                {
+                    string a = row.Cells[7].Value.ToString().Trim();
+                    if (row.Cells[7].Value.ToString().Trim() != "") {
+                        DataGridViewButtonCell btn = new DataGridViewButtonCell();
+                        btn.Value = "View Photo";
+                        row.Cells[8] = btn;
+
+                    }
+
+                }
+                if (((int)row.Cells[0].Value) != -1   && row.Cells["Status"].Value.ToString().Trim() == "Absence")
+                {
+                    row.Cells[0].Value = -1;
+                }
+
+            }
+
+        }
+
+        public Image<Gray, Byte> convertImagetoImageGRAYBYTE(Image img)
+        {
             Bitmap masterImage = (Bitmap)img;
             Image<Gray, Byte> normalizedMasterImage = new Image<Gray, Byte>(masterImage);
             return normalizedMasterImage;
         }
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Image img = Image.FromFile(@"C:\Users\Desmond95\Desktop\test.jpg");
-            Image<Gray, Byte> normalizedMasterImage = convertImagetoImageGRAYBYTE(img);
-            Image<Bgr, Byte> myImage = new Image<Bgr, Byte>((Bitmap)img); 
-            MCvAvgComp[][] facesDetected = normalizedMasterImage.DetectHaarCascade(
-             face,
-             1.2,
-             10,
-             Emgu.CV.CvEnum.HAAR_DETECTION_TYPE.DO_CANNY_PRUNING,
-             new Size(20, 20));
-
-            foreach (MCvAvgComp f in facesDetected[0])
-            {
-                t = t + 1;
-                result = normalizedMasterImage.Copy(f.rect).Convert<Gray, byte>().Resize(100, 100, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
-                if (trainingImages.ToArray().Length != 0)
-                {
-                    MCvTermCriteria termCrit = new MCvTermCriteria(ContTrain, 0.001);
-                    EigenObjectRecognizer recognizer = new EigenObjectRecognizer(
-                       trainingImages.ToArray(),
-                       labels.ToArray(),
-                       3000,
-                       ref termCrit);
-                    name = recognizer.Recognize(result); // detected name of the face is been saved  to the 'name'-variable
-                    //the colour of  the face label name 
-                    myImage.Draw(name, ref font, new Point(f.rect.X - 2, f.rect.Y - 2), new Bgr(Color.LightGreen));
-                    name = recognizer.Recognize(result); // detected name of the face is been saved  to the 'name'-variable
-                    label2.Text = name;
-                }
-                
-
-                
-            }
-            imageBox3.Image = myImage;
-
-        }
+      
 
         Bitmap a = null;
         private void button3_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog dlg = new OpenFileDialog())
             {
-                dlg.Title = "Open Image";
+                dlg.Title = "Choose Image";
 
 
                 if (dlg.ShowDialog() == DialogResult.OK)
@@ -279,7 +198,7 @@ namespace WindowsFormsApplication1
                     pictureBox1.Image = image;
 
                 }
-            }      
+            }
 
         }
         public static Bitmap ResizeImage(Image image, int width, int height)
@@ -309,24 +228,7 @@ namespace WindowsFormsApplication1
         private void button4_Click(object sender, EventArgs e)
         {
             sfm.uploadStudentFace(a, textBox2.Text);
-            retrain();
-        }
-        public void trainFace(Image<Gray, Byte> img,string name)
-        {
-            MCvAvgComp[][] facesDetected = img.DetectHaarCascade(
-             face,
-             1.2,
-             10,
-             Emgu.CV.CvEnum.HAAR_DETECTION_TYPE.DO_CANNY_PRUNING,
-             new Size(20, 20));
-            foreach (MCvAvgComp f in facesDetected[0])
-            {
-                t = t + 1;
-                trainingImages.Add(img.Copy(f.rect).Convert<Gray, byte>().Resize(100, 100, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC));
-                labels.Add(name);
-                ContTrain++; NumLabels++;
-                break;
-            }
+            //retrain();
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -387,166 +289,178 @@ namespace WindowsFormsApplication1
                     dataGridView2.DataSource = dt2;
                 }
                 con.Close();
-                
+
             }
-            else {
+            else
+            {
                 if (currentTime < span)
                     MessageBox.Show("Too early to open class session", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                else {
+                else
+                {
                     MessageBox.Show("Class has ended", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             //Console.WriteLine( "Time Difference (minutes): " + span.TotalMinutes );
 
 
-            
+
         }
         int counter = 0;
         private void button2_Click_1(object sender, EventArgs e)
         {
+
             
-            Image image = grabber.QueryFrame().Bitmap;
-            Image<Gray, byte> ScreenCapture = grabber.QueryGrayFrame().Resize(320, 240, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
-            MCvAvgComp[][] facesDetected = ScreenCapture.DetectHaarCascade(
-                    face,
-                    1.2,
-                    10,
-                    Emgu.CV.CvEnum.HAAR_DETECTION_TYPE.DO_CANNY_PRUNING,
-                    new Size(20, 20));
-            foreach (MCvAvgComp f in facesDetected[0])
-            {
-                result = ScreenCapture.Copy(f.rect).Convert<Gray, byte>().Resize(100, 100, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
-                if (trainingImages.ToArray().Length != 0)
-                {
-                    MCvTermCriteria termCrit = new MCvTermCriteria(ContTrain, 0.001);
-                    EigenObjectRecognizer recognizer = new EigenObjectRecognizer(
-                       trainingImages.ToArray(),
-                       labels.ToArray(),
-                       3000,
-                       ref termCrit);
-                    name = recognizer.Recognize(result); // detected name of the face is been saved  to the 'name'-variable
-                }
-            }
-            if (name != "")
-            {
-                //MessageBox.Show(name + " Attendance Taken", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                SqlConnection con = new SqlConnection(cs.DBConn);
-                SqlCommand cmd = null;
-                con.Open();
-                string cmdString = "select ClassSchedule.id from Student  inner join StudentClassEnroll  on Student.MatriCardNo = StudentClassEnroll.MatriCardNo inner join ClassSchedule on ClassSchedule.[index] = StudentClassEnroll.[index] where Status='Open'  and Student.MatriCardNo=@mc";
-                cmd.Parameters.AddWithValue("@mc", message);
-                cmd = new SqlCommand(cmdString);
-                cmd.Connection = con;
-                SqlDataReader reader = cmd.ExecuteReader();
-                int classindex = -1;
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        classindex = reader.GetInt32(0);
-                    }
-                    reader.Close();
-                    cmd = null;
-                    cmdString = "insert into Attendance(ClassScheduleID,MatriCard,Photo,Status) VALUES (@ClassScheduleID,@MatriCard,@Photo,@Status)";
-                    cmd = new SqlCommand(cmdString);
-                    cmd.Connection = con;
-                    cmd.Parameters.AddWithValue("@ClassScheduleID", classindex);
-                    cmd.Parameters.AddWithValue("@MatriCard", name);
-                    cmd.Parameters.AddWithValue("@Status", "Present");
-                    SqlParameter p = new SqlParameter("@Photo", SqlDbType.Image);
-                    MemoryStream ms = new MemoryStream();
-                    Bitmap bmpImage = new Bitmap(image);
-                    bmpImage.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    byte[] data = ms.GetBuffer();
-                    p.Value = data;
-                    cmd.Parameters.Add(p);
-                    cmd.ExecuteReader();
-
-                }
-                else
-                {
-                    MessageBox.Show("Class has ended or class session not opened yet!", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-                con.Close();
-            }
-            else {
-                if (counter == 3)
-                {
-                    counter = 0;
-                    ShowMyDialogBox();
-                    if (message != "" && message != "Cancelled")
-                    {
-                        SqlConnection con = new SqlConnection(cs.DBConn);
-                        SqlCommand cmd = null;
-                        con.Open();
-                        string cmdString = "select ClassSchedule.id from Student  inner join StudentClassEnroll  on Student.MatriCardNo = StudentClassEnroll.MatriCardNo inner join ClassSchedule on ClassSchedule.[index] = StudentClassEnroll.[index] where Status='Open'  and Student.MatriCardNo=@mc";
-                        cmd = new SqlCommand(cmdString);
-                        cmd.Parameters.AddWithValue("@mc", message);
-                        cmd.Connection = con;
-                        SqlDataReader reader = cmd.ExecuteReader();
-                        int classindex = -1;
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                classindex = reader.GetInt32(0);
-                            }
-                            reader.Close();
-                            cmd = null;
-                            cmdString = "insert into Attendance(ClassScheduleID,MatriCard,Photo,Status) VALUES (@ClassScheduleID,@MatriCard,@Photo,@Status)";
-                            cmd = new SqlCommand(cmdString);
-                            cmd.Connection = con;
-                            cmd.Parameters.AddWithValue("@ClassScheduleID", classindex);
-                            cmd.Parameters.AddWithValue("@MatriCard", name);
-                            cmd.Parameters.AddWithValue("@Status", "Present");
-                            SqlParameter p = new SqlParameter("@Photo", SqlDbType.Image);
-                            MemoryStream ms = new MemoryStream();
-                            Bitmap bmpImage = new Bitmap(image);
-                            bmpImage.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                            byte[] data = ms.GetBuffer();
-                            p.Value = data;
-                            cmd.Parameters.Add(p);
-                            cmd.ExecuteReader();
-
-                        }
-                        else
-                        {
-                            MessageBox.Show("Class has ended or class session not opened yet!", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-                        con.Close();
-
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Unable to detect your face, Please try again!", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    counter++;
-                }
-                
-            }
         }
-        string message = "";
-        public void ShowMyDialogBox()
-        {
-            input testDialog = new input();
-            DialogResult dr = testDialog.ShowDialog(this);
+        
+        Image pictureToDisplay = null;
 
-            // Show testDialog as a modal dialog and determine if DialogResult = OK.
-            if (dr == DialogResult.Yes)
+        private void imageBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+        public void rebindFilter(string studentMatrNo, string CourseCode) {
+
+            //load attendance 
+            SqlConnection con = new SqlConnection(cs.DBConn);
+            SqlCommand cmd = null;
+            con.Open();
+            string cmdString = "";
+
+            if (studentMatrNo == "" && CourseCode == "")
             {
-                // Read the contents of testDialog's TextBox.
-                message = testDialog.textBox1.Text;
+                cmdString = "select isnull(Attendance.Id,-1)as id,ClassSchedule.Id as ClassID,ClassSchedule.[index] as 'CourseCode',convert(varchar,ClassSchedule.startDate) as Date ,Student.MatriCardNo as 'Matriculation No',Student.Name,ISNULL(Attendance.[Status],'Absence') as 'Status',Attendance.Photo as Photo from student inner join StudentClassEnroll on StudentClassEnroll.MatriCardNo = student.MatriCardNo inner join ClassSchedule on ClassSchedule.[index]=StudentClassEnroll.[index] left join Attendance on  ClassSchedule.id=Attendance.ClassScheduleID and Attendance.MatriCard=Student.MatriCardNo order by ClassSchedule.[index],startDate,student.MatriCardNo";
+                cmd = new SqlCommand(cmdString);
+            }
+            else if (studentMatrNo != "" && CourseCode == "")
+            {
+                cmdString = "select isnull(Attendance.Id,-1)as id,ClassSchedule.Id as ClassID,ClassSchedule.[index] as 'CourseCode',convert(varchar,ClassSchedule.startDate) as Date ,Student.MatriCardNo as 'Matriculation No',Student.Name,ISNULL(Attendance.[Status],'Absence') as 'Status',Attendance.Photo as Photo from student inner join StudentClassEnroll on StudentClassEnroll.MatriCardNo = student.MatriCardNo inner join ClassSchedule on ClassSchedule.[index]=StudentClassEnroll.[index] left join Attendance on  ClassSchedule.id=Attendance.ClassScheduleID and Attendance.MatriCard=Student.MatriCardNo where Student.MatriCardNo = @studentMC order by ClassSchedule.[index],startDate,student.MatriCardNo";
+                cmd = new SqlCommand(cmdString);
+                cmd.Parameters.AddWithValue("@studentMC", studentMatrNo);
+            }
+            else if (studentMatrNo == "" && CourseCode != "")
+            {
+                cmdString = "select isnull(Attendance.Id,-1)as id,ClassSchedule.Id as ClassID,ClassSchedule.[index] as 'CourseCode',convert(varchar,ClassSchedule.startDate) as Date ,Student.MatriCardNo  as 'Matriculation No',Student.Name,ISNULL(Attendance.[Status],'Absence') as 'Status',Attendance.Photo as Photo from student inner join StudentClassEnroll on StudentClassEnroll.MatriCardNo = student.MatriCardNo inner join ClassSchedule on ClassSchedule.[index]=StudentClassEnroll.[index] left join Attendance on  ClassSchedule.id=Attendance.ClassScheduleID and Attendance.MatriCard=Student.MatriCardNo where ClassSchedule.[index] = @coursecode order by ClassSchedule.[index],startDate,student.MatriCardNo";
+                cmd = new SqlCommand(cmdString);
+                cmd.Parameters.AddWithValue("@coursecode", CourseCode);
+            }
+            else if (studentMatrNo != "" && CourseCode != "")
+            {
+                cmdString = "select isnull(Attendance.Id,-1)as id,ClassSchedule.Id as ClassID,ClassSchedule.[index] as 'CourseCode',convert(varchar,ClassSchedule.startDate) as Date ,Student.MatriCardNo as 'Matriculation No',Student.Name,ISNULL(Attendance.[Status],'Absence') as 'Status',Attendance.Photo as Photo from student inner join StudentClassEnroll on StudentClassEnroll.MatriCardNo = student.MatriCardNo inner join ClassSchedule on ClassSchedule.[index]=StudentClassEnroll.[index] left join Attendance on  ClassSchedule.id=Attendance.ClassScheduleID and Attendance.MatriCard=Student.MatriCardNo where Student.MatriCardNo = @studentMC and ClassSchedule.[index] = @coursecode order by ClassSchedule.[index],startDate,student.MatriCardNo";
+                cmd = new SqlCommand(cmdString);
+                cmd.Parameters.AddWithValue("@studentMC", studentMatrNo);
+                cmd.Parameters.AddWithValue("@coursecode", CourseCode);
+            }
+            cmd.Connection = con;
+            SqlDataReader reader = cmd.ExecuteReader();
+            DataTable dt = null;
+            if (reader.HasRows)
+            {
+                dataGridView3.Columns.Clear();
+                dt = new DataTable();
+                dt.Load(reader);
+                dt.Columns[0].ReadOnly = false;
+
+                dt.Columns[3].ReadOnly = false;
+                dataGridView3.DataSource = dt;
+                dataGridView3.Columns["id"].Visible = false;
+                dataGridView3.Columns["ClassID"].Visible = false;
+                dataGridView3.Columns["Photo"].Visible = false;
+
+                DataGridViewTextBoxColumn btn = new DataGridViewTextBoxColumn();
+                dataGridView3.Columns.Add(btn);
+                btn.HeaderText = "Photo";
+                btn.Name = "btn";
+                format();
             }
             else
             {
-                message = "Cancelled";
+                dataGridView3.DataSource = dt;
             }
-            testDialog.Dispose();
+            con.Close();
         }
-        Image pictureToDisplay = null;
+        private void txtStudentName_TextChanged(object sender, EventArgs e)
+        {
+            string studentMatrNo = txtStudentName.Text;
+            string CourseCode = txtCourse.Text;
+            rebindFilter(studentMatrNo, CourseCode);
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            string studentMatrNo = txtStudentName.Text;
+            string CourseCode = txtCourse.Text;
+            rebindFilter(studentMatrNo, CourseCode);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int index = (int)dataGridView3.CurrentRow.Cells["ClassID"].Value;
+            int id = (int)dataGridView3.CurrentRow.Cells["id"].Value;
+            string matri = (string)dataGridView3.CurrentRow.Cells["Matriculation No"].Value;
+            if (id!=-1) return;
+            
+            SqlConnection con = new SqlConnection(cs.DBConn);
+            SqlCommand cmd = null;
+            con.Open();
+            string cmdString = "select * from attendance where ClassScheduleID=@dd1 and MatriCard=@dd2";
+            cmd = new SqlCommand(cmdString);
+            cmd.Connection = con;
+            cmd.Parameters.AddWithValue("@dd1", index);
+            cmd.Parameters.AddWithValue("@dd2", matri);
+            SqlDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                reader.Close();
+                cmdString = "update Attendance set status ='Present' where ClassScheduleID=@dd1 and MatriCard=@dd2";
+                cmd = new SqlCommand(cmdString);
+                cmd.Parameters.AddWithValue("@dd1", index);
+                cmd.Parameters.AddWithValue("@dd2", matri);
+                cmd.Connection = con;
+                cmd.ExecuteNonQuery();
+                rebindFilter(txtStudentName.Text, txtCourse.Text);
+            }
+            else {
+                reader.Close();
+                cmdString = "insert into Attendance(ClassScheduleID,MatriCard,[Status]) values (@d1,@d2,@d3)";
+                cmd = new SqlCommand(cmdString);
+                cmd.Parameters.AddWithValue("@d1", index);
+                cmd.Parameters.AddWithValue("@d2", matri);
+                cmd.Parameters.AddWithValue("@d3", "Present");
+                cmd.Connection = con;
+                cmd.ExecuteNonQuery();
+                rebindFilter(txtStudentName.Text, txtCourse.Text);
+            }
+
+
+            
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            int index = (int)dataGridView3.CurrentRow.Cells["ClassID"].Value;
+            int id = (int)dataGridView3.CurrentRow.Cells["id"].Value;
+
+            if (id == -1) return;
+            string matri = (string)dataGridView3.CurrentRow.Cells["Matriculation No"].Value;
+            SqlConnection con = new SqlConnection(cs.DBConn);
+            SqlCommand cmd = null;
+            con.Open();
+            string cmdString = "update Attendance set Status=@d3 where id=@d1";
+            cmd = new SqlCommand(cmdString);
+            cmd.Connection = con;
+            cmd.Parameters.AddWithValue("@d3", "Absence");
+            cmd.Parameters.AddWithValue("@d1", id);
+
+            cmd.ExecuteNonQuery();
+            rebindFilter(txtStudentName.Text, txtCourse.Text);
+        }
+
+
         private void dataGridView3_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 7)
+
+            if (e.ColumnIndex == 8)
             {
                 //get ID of the select row
                 int id = (int)dataGridView3.CurrentRow.Cells[0].Value;
@@ -561,14 +475,16 @@ namespace WindowsFormsApplication1
                 cmd.Parameters.AddWithValue("@id", id);
                 cmd.Connection = con;
                 SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.HasRows) {
-                    while (reader.Read()) {
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
                         byte[] photo = (byte[])reader[0];
                         pictureToDisplay = byteArrayToImage(photo);
                         Image image = ResizeImage(pictureToDisplay, 333, 249);
                         picturebox frm2 = new picturebox();
                         frm2.pictureBox1.Image = image;
-                        frm2.Show(); 
+                        frm2.Show();
                     }
                 }
 
@@ -582,6 +498,8 @@ namespace WindowsFormsApplication1
                 return img;
             }
         }
+
+
     }
-    
+
 }
