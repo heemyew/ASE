@@ -9,6 +9,6 @@ namespace WindowsFormsApplication1.App_Code
 {
     class ConnectionString
     {
-        public string DBConn = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Users\Desmond95\Desktop\NTU\Sem4\ASE\ASE\Main\WindowsFormsApplication1\WindowsFormsApplication1\App_Data\attendance.mdf;Integrated Security=True";
+        public string DBConn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Racheal\Desktop\Y2S2\ASE\ASE\Main\WindowsFormsApplication1\WindowsFormsApplication1\App_Data\attendance.mdf;Integrated Security=True";
     }
 }
