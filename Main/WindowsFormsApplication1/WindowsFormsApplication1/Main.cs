@@ -456,7 +456,175 @@ namespace WindowsFormsApplication1
             rebindFilter(txtStudentName.Text, txtCourse.Text);
         }
 
+        private void button7_Click(object sender, EventArgs e)
+        {
 
+        }
+
+        private void label14_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button7_Click_1(object sender, EventArgs e)
+        {
+            DateTime date1 = dateTimePicker1.Value;
+            DateTime date2 = dateTimePicker2.Value;
+            DateTime datenow = DateTime.Now.AddDays(7);
+
+            /* if (result < 0)
+                 label14.Text = "is earlier than";
+             else if (result == 0)
+                 label14.Text = "is the same time as";
+             else
+                 label14.Text = "is later than";*/
+            //label14.Text = datenow.ToShortDateString();
+            SqlConnection con = new SqlConnection(cs.DBConn);
+            SqlCommand cmd = null;
+            con.Open();
+            int result = DateTime.Compare(date1, date2);
+            if (result < 0)
+            {
+                if (radioButton1.Checked == true)
+                {
+                    //label14.Text = "medical";
+                    string cmdString = "insert into LOA(MatricNo,StartDate,EndDate,Reason,ExtraReason,Status) VALUES (@MatricNo,@StartDate,@EndDate,@Reason,@ExtraReason,@Status)";
+                    cmd = new SqlCommand(cmdString);
+                    cmd.Connection = con;
+                    cmd.Parameters.AddWithValue("@MatricNo", textBox3.Text);
+                    cmd.Parameters.AddWithValue("@StartDate", date1.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@EndDate", date2.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@Reason", "Medical");
+                    cmd.Parameters.AddWithValue("@ExtraReason", textBox1.Text);
+                    cmd.Parameters.AddWithValue("@Status", "Pending");
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                    MessageBox.Show("Application submitted, must submit the MC within 7 working days");
+                }
+                else if (radioButton2.Checked == true)
+                {
+                    //label14.Text = "compassionate";
+                    string cmdString = "insert into LOA(MatricNo,StartDate,EndDate,Reason,ExtraReason,Status) VALUES (@MatricNo,@StartDate,@EndDate,@Reason,@ExtraReason,@Status)";
+                    cmd = new SqlCommand(cmdString);
+                    cmd.Connection = con;
+                    cmd.Parameters.AddWithValue("@MatricNo", textBox3.Text);
+                    cmd.Parameters.AddWithValue("@StartDate", date1.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@EndDate", date2.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@Reason", "compassionate");
+                    cmd.Parameters.AddWithValue("@ExtraReason", textBox1.Text);
+                    cmd.Parameters.AddWithValue("@Status", "Pending");
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                    MessageBox.Show("LOA will be granted within 7 days of death,inclusive of weekend and public holiday");
+                }
+                else if (radioButton3.Checked == true)
+                {
+                    label14.Text = "others";
+                    string cmdString = "insert into LOA(MatricNo,StartDate,EndDate,Reason,ExtraReason,Status) VALUES (@MatricNo,@StartDate,@EndDate,@Reason,@ExtraReason,@Status)";
+                    cmd = new SqlCommand(cmdString);
+                    cmd.Connection = con;
+                    cmd.Parameters.AddWithValue("@MatricNo", textBox3.Text);
+                    cmd.Parameters.AddWithValue("@StartDate", date1.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@EndDate", date2.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@Reason", "others");
+                    cmd.Parameters.AddWithValue("@ExtraReason", textBox1.Text);
+                    cmd.Parameters.AddWithValue("@Status", "Pending");
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                    MessageBox.Show("Application sent. To be considered,application must be submitted with the supporting documents at least 7 working days in advance");
+                }
+                
+            }
+            else if (result == 0)
+            {
+                MessageBox.Show("Cannot apply for LOA on the date itself or earlier");
+            }
+            else
+            {
+                MessageBox.Show("Cannot apply for LOA on the date itself or earlier");
+            }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+        
+        private void button8_Click(object sender, EventArgs e)
+        {
+            SqlConnection con = new SqlConnection(cs.DBConn);
+            SqlCommand cmd = null;
+            con.Open();
+            //string cmdString = "SELECT * FROM LOA";
+            //cmd = new SqlCommand(cmdString);
+            // cmd.Connection = con;
+            //SqlDataReader reader = cmd.ExecuteReader();
+            //DataTable dt = null;
+            dataGridView4.DataSource = null;
+            dataGridView4.Rows.Clear();
+            dataGridView4.Columns.Clear();
+            dataGridView4.Refresh();
+            if (radioButton4.Checked ==true)
+            {
+                SqlDataAdapter sqlda = new SqlDataAdapter("SELECT * FROM LOA WHERE Status=@pending", con);
+                sqlda.SelectCommand.Parameters.AddWithValue("@pending", "Pending");
+                DataTable dtb4 = new DataTable();
+                sqlda.Fill(dtb4);
+                dataGridView4.DataSource = dtb4;
+                //cbStatus.ValueMember = "StatusID";
+                //cbStatus.DisplayMember = "Status";
+                //cbStatus.D
+                //cbStatus.DataSource = dtb4;
+                DataGridViewButtonColumn buttonColumn = new DataGridViewButtonColumn();
+                buttonColumn.HeaderText = "";
+                buttonColumn.Width = 60;
+                buttonColumn.Name = "buttonColumn";
+                buttonColumn.Text = "Approve";
+                buttonColumn.UseColumnTextForButtonValue = true;
+                dataGridView4.Columns.Insert(7, buttonColumn);
+            }
+            else if (radioButton5.Checked == true)
+            {
+                
+                SqlDataAdapter sqlda = new SqlDataAdapter("SELECT * FROM LOA WHERE Status=@approved", con);
+                sqlda.SelectCommand.Parameters.AddWithValue("@approved", "Approved");
+                DataTable dtb4 = new DataTable();
+                sqlda.Fill(dtb4);
+                dataGridView4.DataSource = dtb4;
+            }
+
+
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridView4_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 7)
+            {
+                DataGridViewRow row = dataGridView4.Rows[e.RowIndex];
+                if (MessageBox.Show(string.Format("Do you want to update ID: {0}?", row.Cells[1].Value), "Confirmation", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    using (SqlConnection con = new SqlConnection(cs.DBConn))
+                    {
+                        using (SqlCommand cmd = new SqlCommand("UPDATE LOA SET Status= @approved WHERE Id = @ID", con))
+                        {
+                            cmd.Parameters.AddWithValue("@approved", "Approved");
+                            cmd.CommandType = CommandType.Text;
+                            cmd.Parameters.AddWithValue("@ID", row.Cells[0].Value);
+                            con.Open();
+                            cmd.ExecuteNonQuery();
+                            con.Close();
+                        }
+                    }
+                    dataGridView4.Refresh();
+                    //this.BindGrid();
+                }
+            }
+        }
         private void dataGridView3_CellClick(object sender, DataGridViewCellEventArgs e)
         {
 
