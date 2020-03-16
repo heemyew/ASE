@@ -28,11 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Title title5 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Title title6 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -105,34 +106,39 @@
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(121, 24);
             this.comboBox2.TabIndex = 7;
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
             // 
             // chart2
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart2.Legends.Add(legend1);
-            this.chart2.Location = new System.Drawing.Point(663, 100);
+            chartArea5.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea5);
+            legend5.Name = "Legend1";
+            this.chart2.Legends.Add(legend5);
+            this.chart2.Location = new System.Drawing.Point(578, 107);
             this.chart2.Name = "chart2";
-            this.chart2.Size = new System.Drawing.Size(431, 219);
+            this.chart2.Size = new System.Drawing.Size(589, 323);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
+            title5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            title5.Name = "Title1";
+            title5.Text = "Total Lesson Attended against Grade Scored";
+            this.chart2.Titles.Add(title5);
             // 
             // chart1
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chart1.Legends.Add(legend2);
-            this.chart1.Location = new System.Drawing.Point(27, 90);
+            chartArea6.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea6);
+            legend6.Name = "Legend1";
+            this.chart1.Legends.Add(legend6);
+            this.chart1.Location = new System.Drawing.Point(-4, 107);
             this.chart1.Name = "chart1";
-            this.chart1.Size = new System.Drawing.Size(544, 212);
+            this.chart1.Size = new System.Drawing.Size(617, 300);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
-            title1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            title1.Name = "title1";
-            title1.Text = "Grade distribution by Lab Group";
-            this.chart1.Titles.Add(title1);
+            title6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            title6.Name = "title1";
+            title6.Text = "Grade distribution by Lab Group";
+            this.chart1.Titles.Add(title6);
             // 
             // button6
             // 
@@ -145,7 +151,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(198, 436);
+            this.button5.Location = new System.Drawing.Point(320, 436);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(195, 57);
             this.button5.TabIndex = 3;
@@ -154,7 +160,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(759, 325);
+            this.button4.Location = new System.Drawing.Point(533, 436);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(195, 57);
             this.button4.TabIndex = 2;
@@ -182,7 +188,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(198, 329);
+            this.button3.Location = new System.Drawing.Point(81, 436);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(195, 53);
             this.button3.TabIndex = 0;
@@ -219,6 +225,7 @@
             this.dataGridView3.RowTemplate.Height = 24;
             this.dataGridView3.Size = new System.Drawing.Size(953, 187);
             this.dataGridView3.TabIndex = 23;
+            this.dataGridView3.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellClick);
             // 
             // button2
             // 
