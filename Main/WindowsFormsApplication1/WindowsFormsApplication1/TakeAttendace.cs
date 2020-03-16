@@ -266,5 +266,84 @@ namespace WindowsFormsApplication1
 
             }
         }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            DateTime date1 = dateTimePicker1.Value;
+            DateTime date2 = dateTimePicker2.Value;
+            DateTime datenow = DateTime.Now.AddDays(7);
+
+            /* if (result < 0)
+                 label14.Text = "is earlier than";
+             else if (result == 0)
+                 label14.Text = "is the same time as";
+             else
+                 label14.Text = "is later than";*/
+            //label14.Text = datenow.ToShortDateString();
+            SqlConnection con = new SqlConnection(cs.DBConn);
+            SqlCommand cmd = null;
+            con.Open();
+            int result = DateTime.Compare(date1, date2);
+            if (result < 0)
+            {
+                if (radioButton1.Checked == true)
+                {
+                    //label14.Text = "medical";
+                    string cmdString = "insert into LOA(MatricNo,StartDate,EndDate,Reason,ExtraReason,Status) VALUES (@MatricNo,@StartDate,@EndDate,@Reason,@ExtraReason,@Status)";
+                    cmd = new SqlCommand(cmdString);
+                    cmd.Connection = con;
+                    cmd.Parameters.AddWithValue("@MatricNo", textBox3.Text);
+                    cmd.Parameters.AddWithValue("@StartDate", date1.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@EndDate", date2.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@Reason", "Medical");
+                    cmd.Parameters.AddWithValue("@ExtraReason", textBox1.Text);
+                    cmd.Parameters.AddWithValue("@Status", "Pending");
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                    MessageBox.Show("Application submitted, must submit the MC within 7 working days");
+                }
+                else if (radioButton2.Checked == true)
+                {
+                    //label14.Text = "compassionate";
+                    string cmdString = "insert into LOA(MatricNo,StartDate,EndDate,Reason,ExtraReason,Status) VALUES (@MatricNo,@StartDate,@EndDate,@Reason,@ExtraReason,@Status)";
+                    cmd = new SqlCommand(cmdString);
+                    cmd.Connection = con;
+                    cmd.Parameters.AddWithValue("@MatricNo", textBox3.Text);
+                    cmd.Parameters.AddWithValue("@StartDate", date1.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@EndDate", date2.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@Reason", "compassionate");
+                    cmd.Parameters.AddWithValue("@ExtraReason", textBox1.Text);
+                    cmd.Parameters.AddWithValue("@Status", "Pending");
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                    MessageBox.Show("LOA will be granted within 7 days of death,inclusive of weekend and public holiday");
+                }
+                else if (radioButton3.Checked == true)
+                {
+                    label14.Text = "others";
+                    string cmdString = "insert into LOA(MatricNo,StartDate,EndDate,Reason,ExtraReason,Status) VALUES (@MatricNo,@StartDate,@EndDate,@Reason,@ExtraReason,@Status)";
+                    cmd = new SqlCommand(cmdString);
+                    cmd.Connection = con;
+                    cmd.Parameters.AddWithValue("@MatricNo", textBox3.Text);
+                    cmd.Parameters.AddWithValue("@StartDate", date1.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@EndDate", date2.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@Reason", "others");
+                    cmd.Parameters.AddWithValue("@ExtraReason", textBox1.Text);
+                    cmd.Parameters.AddWithValue("@Status", "Pending");
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                    MessageBox.Show("Application sent. To be considered,application must be submitted with the supporting documents at least 7 working days in advance");
+                }
+
+            }
+            else if (result == 0)
+            {
+                MessageBox.Show("Cannot apply for LOA on the date itself or earlier");
+            }
+            else
+            {
+                MessageBox.Show("Cannot apply for LOA on the date itself or earlier");
+            }
+        }
     }
 }

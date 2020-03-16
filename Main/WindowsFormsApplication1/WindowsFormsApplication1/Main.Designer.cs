@@ -59,30 +59,11 @@
             this.dataGridView3 = new System.Windows.Forms.DataGridView();
             this.panel5 = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.panel7 = new System.Windows.Forms.Panel();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.button7 = new System.Windows.Forms.Button();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.Matric = new System.Windows.Forms.Label();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.radioButton5 = new System.Windows.Forms.RadioButton();
             this.radioButton4 = new System.Windows.Forms.RadioButton();
             this.button8 = new System.Windows.Forms.Button();
             this.dataGridView4 = new System.Windows.Forms.DataGridView();
-            this.panel8 = new System.Windows.Forms.Panel();
-            this.label13 = new System.Windows.Forms.Label();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.txtId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtMatric = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtStartDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -90,6 +71,9 @@
             this.txtReason = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtExtraReason = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.label13 = new System.Windows.Forms.Label();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -104,8 +88,6 @@
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             this.panel5.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.panel7.SuspendLayout();
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).BeginInit();
             this.panel8.SuspendLayout();
@@ -116,7 +98,6 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
-            this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(1, 1);
             this.tabControl1.Name = "tabControl1";
@@ -445,172 +426,6 @@
             this.label8.TabIndex = 0;
             this.label8.Text = "Attendance Information Of the student";
             // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.panel7);
-            this.tabPage2.Controls.Add(this.label14);
-            this.tabPage2.Controls.Add(this.button7);
-            this.tabPage2.Controls.Add(this.textBox3);
-            this.tabPage2.Controls.Add(this.Matric);
-            this.tabPage2.Controls.Add(this.radioButton3);
-            this.tabPage2.Controls.Add(this.radioButton2);
-            this.tabPage2.Controls.Add(this.radioButton1);
-            this.tabPage2.Controls.Add(this.textBox1);
-            this.tabPage2.Controls.Add(this.label12);
-            this.tabPage2.Controls.Add(this.dateTimePicker2);
-            this.tabPage2.Controls.Add(this.dateTimePicker1);
-            this.tabPage2.Controls.Add(this.label11);
-            this.tabPage2.Controls.Add(this.label10);
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1187, 530);
-            this.tabPage2.TabIndex = 5;
-            this.tabPage2.Text = "LOA";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // panel7
-            // 
-            this.panel7.BackColor = System.Drawing.Color.DarkMagenta;
-            this.panel7.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.panel7.Controls.Add(this.label9);
-            this.panel7.Location = new System.Drawing.Point(2, 2);
-            this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(1177, 62);
-            this.panel7.TabIndex = 27;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.BackColor = System.Drawing.Color.Transparent;
-            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.ForeColor = System.Drawing.Color.White;
-            this.label9.Location = new System.Drawing.Point(336, 16);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(401, 29);
-            this.label9.TabIndex = 0;
-            this.label9.Text = "Submission for Leave of Absence";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(538, 199);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(54, 17);
-            this.label14.TabIndex = 40;
-            this.label14.Text = "label14";
-            // 
-            // button7
-            // 
-            this.button7.Location = new System.Drawing.Point(219, 382);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(75, 23);
-            this.button7.TabIndex = 39;
-            this.button7.Text = "Submit";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click_1);
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(139, 91);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(230, 22);
-            this.textBox3.TabIndex = 38;
-            // 
-            // Matric
-            // 
-            this.Matric.AutoSize = true;
-            this.Matric.Location = new System.Drawing.Point(35, 91);
-            this.Matric.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Matric.Name = "Matric";
-            this.Matric.Size = new System.Drawing.Size(72, 17);
-            this.Matric.TabIndex = 37;
-            this.Matric.Text = "Matric No.";
-            // 
-            // radioButton3
-            // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(156, 273);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(275, 21);
-            this.radioButton3.TabIndex = 36;
-            this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "Others (ie. representing the University)";
-            this.radioButton3.UseVisualStyleBackColor = true;
-            // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(156, 246);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(126, 21);
-            this.radioButton2.TabIndex = 35;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "Compassionate";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            // 
-            // radioButton1
-            // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(156, 219);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(77, 21);
-            this.radioButton1.TabIndex = 34;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "Medical";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(156, 299);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(230, 60);
-            this.textBox1.TabIndex = 33;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(51, 219);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(57, 17);
-            this.label12.TabIndex = 32;
-            this.label12.Text = "Reason";
-            // 
-            // dateTimePicker2
-            // 
-            this.dateTimePicker2.Location = new System.Drawing.Point(139, 172);
-            this.dateTimePicker2.Name = "dateTimePicker2";
-            this.dateTimePicker2.Size = new System.Drawing.Size(230, 22);
-            this.dateTimePicker2.TabIndex = 31;
-            // 
-            // dateTimePicker1
-            // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(139, 135);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(230, 22);
-            this.dateTimePicker1.TabIndex = 30;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(40, 177);
-            this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(67, 17);
-            this.label11.TabIndex = 29;
-            this.label11.Text = "End Date";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(35, 135);
-            this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(72, 17);
-            this.label10.TabIndex = 28;
-            this.label10.Text = "Start Date";
-            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.radioButton5);
@@ -660,6 +475,7 @@
             // 
             // dataGridView4
             // 
+            this.dataGridView4.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView4.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView4.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.txtId,
@@ -676,6 +492,56 @@
             this.dataGridView4.Size = new System.Drawing.Size(1130, 260);
             this.dataGridView4.TabIndex = 29;
             this.dataGridView4.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView4_CellContentClick);
+            // 
+            // txtId
+            // 
+            this.txtId.DataPropertyName = "Id";
+            this.txtId.HeaderText = "Id";
+            this.txtId.MinimumWidth = 6;
+            this.txtId.Name = "txtId";
+            this.txtId.Visible = false;
+            // 
+            // txtMatric
+            // 
+            this.txtMatric.DataPropertyName = "MatricNo";
+            this.txtMatric.HeaderText = "MatricNo";
+            this.txtMatric.MinimumWidth = 6;
+            this.txtMatric.Name = "txtMatric";
+            // 
+            // txtStartDate
+            // 
+            this.txtStartDate.DataPropertyName = "StartDate";
+            this.txtStartDate.HeaderText = "StartDate";
+            this.txtStartDate.MinimumWidth = 6;
+            this.txtStartDate.Name = "txtStartDate";
+            // 
+            // txtEndDate
+            // 
+            this.txtEndDate.DataPropertyName = "EndDate";
+            this.txtEndDate.HeaderText = "EndDate";
+            this.txtEndDate.MinimumWidth = 6;
+            this.txtEndDate.Name = "txtEndDate";
+            // 
+            // txtReason
+            // 
+            this.txtReason.DataPropertyName = "Reason";
+            this.txtReason.HeaderText = "Reason";
+            this.txtReason.MinimumWidth = 6;
+            this.txtReason.Name = "txtReason";
+            // 
+            // txtExtraReason
+            // 
+            this.txtExtraReason.DataPropertyName = "ExtraReason";
+            this.txtExtraReason.HeaderText = "ExtraReason";
+            this.txtExtraReason.MinimumWidth = 6;
+            this.txtExtraReason.Name = "txtExtraReason";
+            // 
+            // txtStatus
+            // 
+            this.txtStatus.DataPropertyName = "Status";
+            this.txtStatus.HeaderText = "Status";
+            this.txtStatus.MinimumWidth = 6;
+            this.txtStatus.Name = "txtStatus";
             // 
             // panel8
             // 
@@ -702,63 +568,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // txtId
-            // 
-            this.txtId.DataPropertyName = "Id";
-            this.txtId.HeaderText = "Id";
-            this.txtId.MinimumWidth = 6;
-            this.txtId.Name = "txtId";
-            this.txtId.Visible = false;
-            this.txtId.Width = 125;
-            // 
-            // txtMatric
-            // 
-            this.txtMatric.DataPropertyName = "MatricNo";
-            this.txtMatric.HeaderText = "MatricNo";
-            this.txtMatric.MinimumWidth = 6;
-            this.txtMatric.Name = "txtMatric";
-            this.txtMatric.Width = 125;
-            // 
-            // txtStartDate
-            // 
-            this.txtStartDate.DataPropertyName = "StartDate";
-            this.txtStartDate.HeaderText = "StartDate";
-            this.txtStartDate.MinimumWidth = 6;
-            this.txtStartDate.Name = "txtStartDate";
-            this.txtStartDate.Width = 125;
-            // 
-            // txtEndDate
-            // 
-            this.txtEndDate.DataPropertyName = "EndDate";
-            this.txtEndDate.HeaderText = "EndDate";
-            this.txtEndDate.MinimumWidth = 6;
-            this.txtEndDate.Name = "txtEndDate";
-            this.txtEndDate.Width = 125;
-            // 
-            // txtReason
-            // 
-            this.txtReason.DataPropertyName = "Reason";
-            this.txtReason.HeaderText = "Reason";
-            this.txtReason.MinimumWidth = 6;
-            this.txtReason.Name = "txtReason";
-            this.txtReason.Width = 125;
-            // 
-            // txtExtraReason
-            // 
-            this.txtExtraReason.DataPropertyName = "ExtraReason";
-            this.txtExtraReason.HeaderText = "ExtraReason";
-            this.txtExtraReason.MinimumWidth = 6;
-            this.txtExtraReason.Name = "txtExtraReason";
-            this.txtExtraReason.Width = 125;
-            // 
-            // txtStatus
-            // 
-            this.txtStatus.DataPropertyName = "Status";
-            this.txtStatus.HeaderText = "Status";
-            this.txtStatus.MinimumWidth = 6;
-            this.txtStatus.Name = "txtStatus";
-            this.txtStatus.Width = 125;
             // 
             // Main
             // 
@@ -789,10 +598,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
-            this.panel7.ResumeLayout(false);
-            this.panel7.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).EndInit();
@@ -836,22 +641,6 @@
         internal System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TabPage tabPage2;
-        internal System.Windows.Forms.Panel panel7;
-        internal System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.TextBox textBox3;
-        internal System.Windows.Forms.Label Matric;
-        private System.Windows.Forms.RadioButton radioButton3;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.DateTimePicker dateTimePicker2;
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
-        internal System.Windows.Forms.Label label11;
-        internal System.Windows.Forms.Label label10;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.DataGridView dataGridView4;
         internal System.Windows.Forms.Panel panel8;

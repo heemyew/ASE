@@ -34,10 +34,31 @@ namespace WindowsFormsApplication1
         SFaceManager sfm = new SFaceManager();
         ConnectionString cs = new ConnectionString();
 
+        readonly System.Windows.Forms.Timer myTimer = new System.Windows.Forms.Timer();
+
+        private void StartMethod(object sender, EventArgs e)
+        {
+            maintain();
+        }
 
         public Main()
         {
             InitializeComponent();
+            maintain();
+            myTimer.Interval = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+            myTimer.Tick += StartMethod;
+            myTimer.Enabled = true;
+
+        }
+        public void maintain()
+        {
+            SqlConnection con = new SqlConnection(cs.DBConn);
+            SqlCommand cmd = null;
+            con.Open();
+            string cmdString = "update ClassSchedule set Status='Ended' where endDate < GETDATE()";
+            cmd = new SqlCommand(cmdString);
+            cmd.Connection = con;
+            cmd.ExecuteNonQuery();
         }
         
 
@@ -49,8 +70,9 @@ namespace WindowsFormsApplication1
                 SqlConnection con = new SqlConnection(cs.DBConn);
                 SqlCommand cmd = null;
                 con.Open();
-                string cmdString = "select * from ClassSchedule where Status='Closed' and day(startDate)=day(GETDATE()) and  month(startDate)=month(GETDATE()) and year(startDate)=year(GETDATE())";
+                string cmdString = "select ClassSchedule.Id, ClassSchedule.CourseCode,ClassSchedule.[index], startDate as 'Start Date', endDate as 'End Date', Status from ClassSchedule inner join Responsibility on Responsibility.[index] =ClassSchedule.[index] where status='Closed' and day(startDate)=day(GETDATE()) and  month(startDate)=month(GETDATE()) and year(startDate)=year(GETDATE()) and staffId = @staffid order by ClassSchedule.CourseCode,ClassSchedule.[index], startDate ";
                 cmd = new SqlCommand(cmdString);
+                cmd.Parameters.AddWithValue("staffid", LoginInfo.StaffID);
                 cmd.Connection = con;
                 SqlDataReader reader = cmd.ExecuteReader();
                 DataTable dt = null;
@@ -69,9 +91,10 @@ namespace WindowsFormsApplication1
                 reader.Close();
 
                 cmd = null;
-                cmdString = "select * from ClassSchedule where Status='Open' ";
+                cmdString = "select ClassSchedule.Id, ClassSchedule.CourseCode,ClassSchedule.[index], startDate as 'Start Date', endDate as 'End Date', Status from ClassSchedule inner join Responsibility on Responsibility.[index] =ClassSchedule.[index] where status='Open' and day(startDate)=day(GETDATE()) and  month(startDate)=month(GETDATE()) and year(startDate)=year(GETDATE()) and staffId = @staffid order by ClassSchedule.CourseCode,ClassSchedule.[index], startDate  ";
                 cmd = new SqlCommand(cmdString);
                 cmd.Connection = con;
+                cmd.Parameters.AddWithValue("staffid", LoginInfo.StaffID);
                 SqlDataReader reader1 = cmd.ExecuteReader();
                 DataTable dt2 = null;
                 if (reader1.HasRows)
@@ -97,9 +120,10 @@ namespace WindowsFormsApplication1
                 SqlConnection con = new SqlConnection(cs.DBConn);
                 SqlCommand cmd = null;
                 con.Open();
-                string cmdString = "select isnull(Attendance.Id,-1)as id,ClassSchedule.Id as ClassID,ClassSchedule.[CourseCode] as 'CourseCode',convert(varchar,ClassSchedule.startDate) as Date ,Student.MatriCardNo as 'Matriculation No',Student.Name,ISNULL(Attendance.[Status],'Absence') as 'Status',Attendance.Photo as Photo from student inner join StudentClassEnroll on StudentClassEnroll.MatriCardNo = student.MatriCardNo inner join ClassSchedule on ClassSchedule.[CourseCode]=StudentClassEnroll.[CourseCode] left join Attendance on  ClassSchedule.id=Attendance.ClassScheduleID and Attendance.MatriCard=Student.MatriCardNo order by ClassSchedule.[CourseCode],startDate,student.MatriCardNo";
+                string cmdString = "select isnull(Attendance.Id,-1)as id,ClassSchedule.Id as ClassID,ClassSchedule.[CourseCode] as 'CourseCode',convert(varchar,ClassSchedule.startDate) as Date ,Student.MatriCardNo as 'Matriculation No',Student.Name,ISNULL(Attendance.[Status],'Absence') as 'Status',Attendance.Photo as Photo,Remarks from student inner join StudentClassEnroll on StudentClassEnroll.MatriCardNo = student.MatriCardNo inner join ClassSchedule on ClassSchedule.[CourseCode]=StudentClassEnroll.[CourseCode] and ClassSchedule.[index]=StudentClassEnroll.[index] inner join Responsibility on Responsibility.[index] = ClassSchedule.[index] left join Attendance on  ClassSchedule.id=Attendance.ClassScheduleID and Attendance.MatriCard=Student.MatriCardNo where staffId=@staffid   order by ClassSchedule.[CourseCode],startDate,student.MatriCardNo";
                 cmd = new SqlCommand(cmdString);
                 cmd.Connection = con;
+                cmd.Parameters.AddWithValue("@staffid", LoginInfo.StaffID);
                 SqlDataReader reader = cmd.ExecuteReader();
                 DataTable dt = null;
                 if (reader.HasRows)
@@ -113,11 +137,18 @@ namespace WindowsFormsApplication1
                     dataGridView3.Columns["id"].Visible = false;
                     dataGridView3.Columns["ClassID"].Visible = false;
                     dataGridView3.Columns["Photo"].Visible = false;
+                    dataGridView3.Columns["Remarks"].Visible = false;
 
                     DataGridViewTextBoxColumn btn = new DataGridViewTextBoxColumn();
                     dataGridView3.Columns.Add(btn);
                     btn.HeaderText = "Photo";
                     btn.Name = "btn";
+
+                    DataGridViewTextBoxColumn btn2 = new DataGridViewTextBoxColumn();
+                    dataGridView3.Columns.Add(btn2);
+                    btn2.HeaderText = "Remark";
+                    btn2.Name = "btn2";
+
                     format();
 
             
@@ -131,11 +162,11 @@ namespace WindowsFormsApplication1
         }
         public void format()
         {
-            DataGridViewColumn column = dataGridView3.Columns[3];
+            DataGridViewColumn column = dataGridView3.Columns["Date"];
             column.Width = 230;
-            DataGridViewColumn columns = dataGridView3.Columns[2];
-            columns.Width = 70;
-            
+            DataGridViewColumn columns = dataGridView3.Columns["CourseCode"];
+            columns.Width = 90;
+
             foreach (DataGridViewColumn a in dataGridView3.Columns)
             {
                 a.SortMode = DataGridViewColumnSortMode.NotSortable;
@@ -148,22 +179,26 @@ namespace WindowsFormsApplication1
             {
                 string date = row.Cells["Date"].Value.ToString();
                 DateTime datet = DateTime.Parse(date);
-                row.Cells[3].Value = datet.ToString("dddd, dd MMMM yyyy HH:mm tt");
-
-              
+                row.Cells["Date"].Value = datet.ToString("dddd, dd MMMM yyyy HH:mm tt");
 
                 if (((int)row.Cells[0].Value) != -1)
                 {
-                    string a = row.Cells[7].Value.ToString().Trim();
-                    if (row.Cells[7].Value.ToString().Trim() != "") {
+                    string a = row.Cells["Photo"].Value.ToString().Trim();
+                    if (row.Cells["Photo"].Value.ToString().Trim() != "")
+                    {
                         DataGridViewButtonCell btn = new DataGridViewButtonCell();
                         btn.Value = "View Photo";
-                        row.Cells[8] = btn;
-
+                        row.Cells[9] = btn;
                     }
+                }
+                if (row.Cells["Remarks"].Value.ToString().Trim() != "")
+                {
+                    DataGridViewButtonCell btn = new DataGridViewButtonCell();
+                    btn.Value = "View Remarks";
+                    row.Cells[10] = btn;
 
                 }
-                if (((int)row.Cells[0].Value) != -1   && row.Cells["Status"].Value.ToString().Trim() == "Absence")
+                if (((int)row.Cells[0].Value) != -1 && row.Cells["Status"].Value.ToString().Trim() == "Absence")
                 {
                     row.Cells[0].Value = -1;
                 }
@@ -233,9 +268,9 @@ namespace WindowsFormsApplication1
 
         private void button5_Click(object sender, EventArgs e)
         {
-            int index = (int)dataGridView1.CurrentRow.Cells[0].Value;
-            DateTime startDate = (DateTime)dataGridView1.CurrentRow.Cells[2].Value;
-            DateTime endDate = (DateTime)dataGridView1.CurrentRow.Cells[3].Value;
+            int index = (int)dataGridView1.CurrentRow.Cells["id"].Value;
+            DateTime startDate = (DateTime)dataGridView1.CurrentRow.Cells["Start Date"].Value;
+            DateTime endDate = (DateTime)dataGridView1.CurrentRow.Cells["End Date"].Value;
             DateTime currentTime = DateTime.Now;
             //DateTime.Now.ToString(@"MM\/dd\/yyyy h\:mm tt");
 
@@ -253,9 +288,10 @@ namespace WindowsFormsApplication1
                 reader.Close();
 
                 SqlCommand cmd1 = new SqlCommand();
-                string cmdString1 = "select * from ClassSchedule where Status='Closed'  and day(startDate)=day(GETDATE()) and  month(startDate)=month(GETDATE()) and year(startDate)=year(GETDATE())";
+                string cmdString1 = "select ClassSchedule.Id, ClassSchedule.CourseCode,ClassSchedule.[index], startDate as 'Start Date', endDate as 'End Date', Status from ClassSchedule inner join Responsibility on Responsibility.[index] =ClassSchedule.[index] where status='Closed' and day(startDate)=day(GETDATE()) and  month(startDate)=month(GETDATE()) and year(startDate)=year(GETDATE()) and staffId = @staffid order by ClassSchedule.CourseCode,ClassSchedule.[index], startDate ";
                 cmd1 = new SqlCommand(cmdString1);
                 cmd1.Connection = con;
+                cmd1.Parameters.AddWithValue("staffid", LoginInfo.StaffID);
                 SqlDataReader reader1 = cmd1.ExecuteReader();
                 DataTable dt = null;
                 if (reader1.HasRows)
@@ -272,8 +308,9 @@ namespace WindowsFormsApplication1
                 reader1.Close();
 
                 cmd1 = null;
-                cmdString1 = "select * from ClassSchedule where Status='Open'";
+                cmdString1 = "select ClassSchedule.Id, ClassSchedule.CourseCode,ClassSchedule.[index], startDate as 'Start Date', endDate as 'End Date', Status from ClassSchedule inner join Responsibility on Responsibility.[index] =ClassSchedule.[index] where status='Open' and day(startDate)=day(GETDATE()) and  month(startDate)=month(GETDATE()) and year(startDate)=year(GETDATE()) and staffId = @staffid order by ClassSchedule.CourseCode,ClassSchedule.[index], startDate ";
                 cmd1 = new SqlCommand(cmdString1);
+                cmd1.Parameters.AddWithValue("staffid", LoginInfo.StaffID);
                 cmd1.Connection = con;
                 SqlDataReader reader2 = cmd1.ExecuteReader();
                 DataTable dt2 = null;
@@ -301,10 +338,8 @@ namespace WindowsFormsApplication1
                 }
             }
             //Console.WriteLine( "Time Difference (minutes): " + span.TotalMinutes );
-
-
-
         }
+
         int counter = 0;
         private void button2_Click_1(object sender, EventArgs e)
         {
@@ -318,7 +353,8 @@ namespace WindowsFormsApplication1
         {
 
         }
-        public void rebindFilter(string studentMatrNo, string CourseCode) {
+        public void rebindFilter(string studentMatrNo, string CourseCode)
+        {
 
             //load attendance 
             SqlConnection con = new SqlConnection(cs.DBConn);
@@ -328,27 +364,35 @@ namespace WindowsFormsApplication1
 
             if (studentMatrNo == "" && CourseCode == "")
             {
-                cmdString = "select isnull(Attendance.Id,-1)as id,ClassSchedule.Id as ClassID,ClassSchedule.[CourseCode] as 'CourseCode',convert(varchar,ClassSchedule.startDate) as Date ,Student.MatriCardNo as 'Matriculation No',Student.Name,ISNULL(Attendance.[Status],'Absence') as 'Status',Attendance.Photo as Photo from student inner join StudentClassEnroll on StudentClassEnroll.MatriCardNo = student.MatriCardNo inner join ClassSchedule on ClassSchedule.[index]=StudentClassEnroll.[index] left join Attendance on  ClassSchedule.id=Attendance.ClassScheduleID and Attendance.MatriCard=Student.MatriCardNo order by ClassSchedule.[CourseCode],startDate,student.MatriCardNo";
+                cmdString = "select isnull(Attendance.Id,-1)as id,ClassSchedule.Id as ClassID,ClassSchedule.[CourseCode] as 'CourseCode',convert(varchar,ClassSchedule.startDate) as Date ,Student.MatriCardNo as 'Matriculation No',Student.Name,ISNULL(Attendance.[Status],'Absence') as 'Status',Attendance.Photo as Photo,Remarks from student inner join StudentClassEnroll on StudentClassEnroll.MatriCardNo = student.MatriCardNo inner join ClassSchedule on ClassSchedule.[CourseCode]=StudentClassEnroll.[CourseCode] and ClassSchedule.[index]=StudentClassEnroll.[index] inner join Responsibility on Responsibility.[index] = ClassSchedule.[index] left join Attendance on  ClassSchedule.id=Attendance.ClassScheduleID and Attendance.MatriCard=Student.MatriCardNo where  staffId=@staffid  order by ClassSchedule.[CourseCode],startDate,student.MatriCardNo";
                 cmd = new SqlCommand(cmdString);
+                cmd.Parameters.AddWithValue("@staffid", LoginInfo.StaffID);
+
             }
             else if (studentMatrNo != "" && CourseCode == "")
             {
-                cmdString = "select isnull(Attendance.Id,-1)as id,ClassSchedule.Id as ClassID,ClassSchedule.[CourseCode] as 'CourseCode',convert(varchar,ClassSchedule.startDate) as Date ,Student.MatriCardNo as 'Matriculation No',Student.Name,ISNULL(Attendance.[Status],'Absence') as 'Status',Attendance.Photo as Photo from student inner join StudentClassEnroll on StudentClassEnroll.MatriCardNo = student.MatriCardNo inner join ClassSchedule on ClassSchedule.[CourseCode]=StudentClassEnroll.[index] left join Attendance on  ClassSchedule.id=Attendance.ClassScheduleID and Attendance.MatriCard=Student.MatriCardNo where Student.MatriCardNo = @studentMC order by ClassSchedule.[CourseCode],startDate,student.MatriCardNo";
+                cmdString = "select isnull(Attendance.Id,-1)as id,ClassSchedule.Id as ClassID,ClassSchedule.[CourseCode] as 'CourseCode',convert(varchar,ClassSchedule.startDate) as Date ,Student.MatriCardNo as 'Matriculation No',Student.Name,ISNULL(Attendance.[Status],'Absence') as 'Status',Attendance.Photo as Photo ,Remarks from student inner join StudentClassEnroll on StudentClassEnroll.MatriCardNo = student.MatriCardNo inner join ClassSchedule on ClassSchedule.[CourseCode]=StudentClassEnroll.[CourseCode] and ClassSchedule.[index]=StudentClassEnroll.[index] inner join Responsibility on Responsibility.[index] = ClassSchedule.[index] left join Attendance on  ClassSchedule.id=Attendance.ClassScheduleID and Attendance.MatriCard=Student.MatriCardNo where staffId=@staffid and Student.MatriCardNo like @studentMC order by ClassSchedule.[CourseCode],startDate,student.MatriCardNo";
                 cmd = new SqlCommand(cmdString);
-                cmd.Parameters.AddWithValue("@studentMC", studentMatrNo);
+                cmd.Parameters.AddWithValue("@studentMC", "%" + studentMatrNo + "%");
+                cmd.Parameters.AddWithValue("@staffid", LoginInfo.StaffID);
+
             }
             else if (studentMatrNo == "" && CourseCode != "")
             {
-                cmdString = "select isnull(Attendance.Id,-1)as id,ClassSchedule.Id as ClassID,ClassSchedule.[CourseCode] as 'CourseCode',convert(varchar,ClassSchedule.startDate) as Date ,Student.MatriCardNo  as 'Matriculation No',Student.Name,ISNULL(Attendance.[Status],'Absence') as 'Status',Attendance.Photo as Photo from student inner join StudentClassEnroll on StudentClassEnroll.MatriCardNo = student.MatriCardNo inner join ClassSchedule on ClassSchedule.[index]=StudentClassEnroll.[index] left join Attendance on  ClassSchedule.id=Attendance.ClassScheduleID and Attendance.MatriCard=Student.MatriCardNo where ClassSchedule.[CourseCode] = @coursecode order by ClassSchedule.[CourseCode],startDate,student.MatriCardNo";
+                cmdString = "select isnull(Attendance.Id,-1)as id,ClassSchedule.Id as ClassID,ClassSchedule.[CourseCode] as 'CourseCode',convert(varchar,ClassSchedule.startDate) as Date ,Student.MatriCardNo  as 'Matriculation No',Student.Name,ISNULL(Attendance.[Status],'Absence') as 'Status',Attendance.Photo as Photo,Remarks from student inner join StudentClassEnroll on StudentClassEnroll.MatriCardNo = student.MatriCardNo inner join ClassSchedule on ClassSchedule.[CourseCode]=StudentClassEnroll.[CourseCode] and ClassSchedule.[index]=StudentClassEnroll.[index] inner join Responsibility on Responsibility.[index] = ClassSchedule.[index] left join Attendance on  ClassSchedule.id=Attendance.ClassScheduleID and Attendance.MatriCard=Student.MatriCardNo where staffId=@staffid and  ClassSchedule.[CourseCode] like @coursecode order by ClassSchedule.[CourseCode],startDate,student.MatriCardNo";
                 cmd = new SqlCommand(cmdString);
-                cmd.Parameters.AddWithValue("@coursecode", CourseCode);
+                cmd.Parameters.AddWithValue("@coursecode", "%" + CourseCode + "%");
+                cmd.Parameters.AddWithValue("@staffid", LoginInfo.StaffID);
+
             }
             else if (studentMatrNo != "" && CourseCode != "")
             {
-                cmdString = "select isnull(Attendance.Id,-1)as id,ClassSchedule.Id as ClassID,ClassSchedule.[CourseCode] as 'CourseCode',convert(varchar,ClassSchedule.startDate) as Date ,Student.MatriCardNo as 'Matriculation No',Student.Name,ISNULL(Attendance.[Status],'Absence') as 'Status',Attendance.Photo as Photo from student inner join StudentClassEnroll on StudentClassEnroll.MatriCardNo = student.MatriCardNo inner join ClassSchedule on ClassSchedule.[index]=StudentClassEnroll.[index] left join Attendance on  ClassSchedule.id=Attendance.ClassScheduleID and Attendance.MatriCard=Student.MatriCardNo where Student.MatriCardNo = @studentMC and ClassSchedule.[CourseCode] = @coursecode order by ClassSchedule.[CourseCode],startDate,student.MatriCardNo";
+                cmdString = "select isnull(Attendance.Id,-1)as id,ClassSchedule.Id as ClassID,ClassSchedule.[CourseCode] as 'CourseCode',convert(varchar,ClassSchedule.startDate) as Date ,Student.MatriCardNo as 'Matriculation No',Student.Name,ISNULL(Attendance.[Status],'Absence') as 'Status',Attendance.Photo as Photo,Remarks from student inner join StudentClassEnroll on StudentClassEnroll.MatriCardNo = student.MatriCardNo inner join ClassSchedule on ClassSchedule.[CourseCode]=StudentClassEnroll.[CourseCode] and ClassSchedule.[index]=StudentClassEnroll.[index] inner join Responsibility on Responsibility.[index] = ClassSchedule.[index] left join Attendance on  ClassSchedule.id=Attendance.ClassScheduleID and Attendance.MatriCard=Student.MatriCardNo where staffId=@staffid and  Student.MatriCardNo like @studentMC and ClassSchedule.[CourseCode] like @coursecode order by ClassSchedule.[CourseCode],startDate,student.MatriCardNo";
                 cmd = new SqlCommand(cmdString);
-                cmd.Parameters.AddWithValue("@studentMC", studentMatrNo);
-                cmd.Parameters.AddWithValue("@coursecode", CourseCode);
+                cmd.Parameters.AddWithValue("@studentMC", "%" + studentMatrNo + "%");
+                cmd.Parameters.AddWithValue("@coursecode", "%" + CourseCode + "%");
+                cmd.Parameters.AddWithValue("@staffid", LoginInfo.StaffID);
+
             }
             cmd.Connection = con;
             SqlDataReader reader = cmd.ExecuteReader();
@@ -365,11 +409,17 @@ namespace WindowsFormsApplication1
                 dataGridView3.Columns["id"].Visible = false;
                 dataGridView3.Columns["ClassID"].Visible = false;
                 dataGridView3.Columns["Photo"].Visible = false;
+                dataGridView3.Columns["Remarks"].Visible = false;
 
                 DataGridViewTextBoxColumn btn = new DataGridViewTextBoxColumn();
                 dataGridView3.Columns.Add(btn);
                 btn.HeaderText = "Photo";
                 btn.Name = "btn";
+
+                DataGridViewTextBoxColumn btn2 = new DataGridViewTextBoxColumn();
+                dataGridView3.Columns.Add(btn2);
+                btn2.HeaderText = "Remark";
+                btn2.Name = "btn2";
                 format();
             }
             else
@@ -391,14 +441,36 @@ namespace WindowsFormsApplication1
             string CourseCode = txtCourse.Text;
             rebindFilter(studentMatrNo, CourseCode);
         }
+        string reason = "";
+        public void ShowMyDialogBox()
+        {
+            reason testDialog = new reason();
+            DialogResult dr = testDialog.ShowDialog(this);
 
+            // Show testDialog as a modal dialog and determine if DialogResult = OK.
+            if (dr == DialogResult.Yes)
+            {
+                // Read the contents of testDialog's TextBox.
+                reason = testDialog.txtreason.Text;
+            }
+            else
+            {
+                reason = "Cancelled";
+            }
+            testDialog.Dispose();
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             int index = (int)dataGridView3.CurrentRow.Cells["ClassID"].Value;
             int id = (int)dataGridView3.CurrentRow.Cells["id"].Value;
             string matri = (string)dataGridView3.CurrentRow.Cells["Matriculation No"].Value;
-            if (id!=-1) return;
-            
+            if (id != -1) return;
+
+            ShowMyDialogBox();
+            if (reason == "Cancelled")
+            {
+                return;
+            }
             SqlConnection con = new SqlConnection(cs.DBConn);
             SqlCommand cmd = null;
             con.Open();
@@ -411,28 +483,32 @@ namespace WindowsFormsApplication1
             if (reader.HasRows)
             {
                 reader.Close();
-                cmdString = "update Attendance set status ='Present' where ClassScheduleID=@dd1 and MatriCard=@dd2";
+                cmdString = "update Attendance set status ='Present', Remarks=@reason where ClassScheduleID=@dd1 and MatriCard=@dd2";
                 cmd = new SqlCommand(cmdString);
                 cmd.Parameters.AddWithValue("@dd1", index);
                 cmd.Parameters.AddWithValue("@dd2", matri);
+                cmd.Parameters.AddWithValue("@reason", reason);
                 cmd.Connection = con;
                 cmd.ExecuteNonQuery();
                 rebindFilter(txtStudentName.Text, txtCourse.Text);
             }
-            else {
+            else
+            {
                 reader.Close();
-                cmdString = "insert into Attendance(ClassScheduleID,MatriCard,[Status]) values (@d1,@d2,@d3)";
+                cmdString = "insert into Attendance(ClassScheduleID,MatriCard,[Status],Remarks) values (@d1,@d2,@d3,@reason)";
                 cmd = new SqlCommand(cmdString);
                 cmd.Parameters.AddWithValue("@d1", index);
                 cmd.Parameters.AddWithValue("@d2", matri);
                 cmd.Parameters.AddWithValue("@d3", "Present");
+                cmd.Parameters.AddWithValue("@reason", reason);
+
                 cmd.Connection = con;
                 cmd.ExecuteNonQuery();
                 rebindFilter(txtStudentName.Text, txtCourse.Text);
             }
 
 
-            
+
 
         }
 
@@ -442,113 +518,30 @@ namespace WindowsFormsApplication1
             int id = (int)dataGridView3.CurrentRow.Cells["id"].Value;
 
             if (id == -1) return;
+
+
+            ShowMyDialogBox();
+            if (reason == "Cancelled")
+            {
+                return;
+            }
             string matri = (string)dataGridView3.CurrentRow.Cells["Matriculation No"].Value;
             SqlConnection con = new SqlConnection(cs.DBConn);
             SqlCommand cmd = null;
             con.Open();
-            string cmdString = "update Attendance set Status=@d3 where id=@d1";
+            string cmdString = "update Attendance set Status=@d3, Remarks=@d4 where id=@d1";
             cmd = new SqlCommand(cmdString);
             cmd.Connection = con;
             cmd.Parameters.AddWithValue("@d3", "Absence");
             cmd.Parameters.AddWithValue("@d1", id);
+            cmd.Parameters.AddWithValue("@d4", reason);
 
             cmd.ExecuteNonQuery();
             rebindFilter(txtStudentName.Text, txtCourse.Text);
         }
 
-        private void button7_Click(object sender, EventArgs e)
-        {
 
-        }
-
-        private void label14_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button7_Click_1(object sender, EventArgs e)
-        {
-            DateTime date1 = dateTimePicker1.Value;
-            DateTime date2 = dateTimePicker2.Value;
-            DateTime datenow = DateTime.Now.AddDays(7);
-
-            /* if (result < 0)
-                 label14.Text = "is earlier than";
-             else if (result == 0)
-                 label14.Text = "is the same time as";
-             else
-                 label14.Text = "is later than";*/
-            //label14.Text = datenow.ToShortDateString();
-            SqlConnection con = new SqlConnection(cs.DBConn);
-            SqlCommand cmd = null;
-            con.Open();
-            int result = DateTime.Compare(date1, date2);
-            if (result < 0)
-            {
-                if (radioButton1.Checked == true)
-                {
-                    //label14.Text = "medical";
-                    string cmdString = "insert into LOA(MatricNo,StartDate,EndDate,Reason,ExtraReason,Status) VALUES (@MatricNo,@StartDate,@EndDate,@Reason,@ExtraReason,@Status)";
-                    cmd = new SqlCommand(cmdString);
-                    cmd.Connection = con;
-                    cmd.Parameters.AddWithValue("@MatricNo", textBox3.Text);
-                    cmd.Parameters.AddWithValue("@StartDate", date1.ToString("yyyy-MM-dd"));
-                    cmd.Parameters.AddWithValue("@EndDate", date2.ToString("yyyy-MM-dd"));
-                    cmd.Parameters.AddWithValue("@Reason", "Medical");
-                    cmd.Parameters.AddWithValue("@ExtraReason", textBox1.Text);
-                    cmd.Parameters.AddWithValue("@Status", "Pending");
-                    cmd.ExecuteNonQuery();
-                    con.Close();
-                    MessageBox.Show("Application submitted, must submit the MC within 7 working days");
-                }
-                else if (radioButton2.Checked == true)
-                {
-                    //label14.Text = "compassionate";
-                    string cmdString = "insert into LOA(MatricNo,StartDate,EndDate,Reason,ExtraReason,Status) VALUES (@MatricNo,@StartDate,@EndDate,@Reason,@ExtraReason,@Status)";
-                    cmd = new SqlCommand(cmdString);
-                    cmd.Connection = con;
-                    cmd.Parameters.AddWithValue("@MatricNo", textBox3.Text);
-                    cmd.Parameters.AddWithValue("@StartDate", date1.ToString("yyyy-MM-dd"));
-                    cmd.Parameters.AddWithValue("@EndDate", date2.ToString("yyyy-MM-dd"));
-                    cmd.Parameters.AddWithValue("@Reason", "compassionate");
-                    cmd.Parameters.AddWithValue("@ExtraReason", textBox1.Text);
-                    cmd.Parameters.AddWithValue("@Status", "Pending");
-                    cmd.ExecuteNonQuery();
-                    con.Close();
-                    MessageBox.Show("LOA will be granted within 7 days of death,inclusive of weekend and public holiday");
-                }
-                else if (radioButton3.Checked == true)
-                {
-                    label14.Text = "others";
-                    string cmdString = "insert into LOA(MatricNo,StartDate,EndDate,Reason,ExtraReason,Status) VALUES (@MatricNo,@StartDate,@EndDate,@Reason,@ExtraReason,@Status)";
-                    cmd = new SqlCommand(cmdString);
-                    cmd.Connection = con;
-                    cmd.Parameters.AddWithValue("@MatricNo", textBox3.Text);
-                    cmd.Parameters.AddWithValue("@StartDate", date1.ToString("yyyy-MM-dd"));
-                    cmd.Parameters.AddWithValue("@EndDate", date2.ToString("yyyy-MM-dd"));
-                    cmd.Parameters.AddWithValue("@Reason", "others");
-                    cmd.Parameters.AddWithValue("@ExtraReason", textBox1.Text);
-                    cmd.Parameters.AddWithValue("@Status", "Pending");
-                    cmd.ExecuteNonQuery();
-                    con.Close();
-                    MessageBox.Show("Application sent. To be considered,application must be submitted with the supporting documents at least 7 working days in advance");
-                }
-                
-            }
-            else if (result == 0)
-            {
-                MessageBox.Show("Cannot apply for LOA on the date itself or earlier");
-            }
-            else
-            {
-                MessageBox.Show("Cannot apply for LOA on the date itself or earlier");
-            }
-        }
-
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
+        
         
         private void button8_Click(object sender, EventArgs e)
         {
@@ -627,13 +620,16 @@ namespace WindowsFormsApplication1
         }
         private void dataGridView3_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-
-            if (e.ColumnIndex == 8)
+            if (e.ColumnIndex == 9)
             {
                 //get ID of the select row
                 int id = (int)dataGridView3.CurrentRow.Cells[0].Value;
+
                 if (id == -1)
+                {
                     return;
+                }
+
                 //display the picture
                 SqlConnection con = new SqlConnection(cs.DBConn);
                 SqlCommand cmd = null;
@@ -647,6 +643,7 @@ namespace WindowsFormsApplication1
                 {
                     while (reader.Read())
                     {
+                        if (DBNull.Value == reader[0]) return;
                         byte[] photo = (byte[])reader[0];
                         pictureToDisplay = byteArrayToImage(photo);
                         Image image = ResizeImage(pictureToDisplay, 333, 249);
@@ -655,7 +652,18 @@ namespace WindowsFormsApplication1
                         frm2.Show();
                     }
                 }
-
+            }
+            if (e.ColumnIndex == 10)
+            {
+                string c = dataGridView3.CurrentRow.Cells["Remarks"].Value.ToString().Trim();
+                if (c != "")
+                {
+                    reason testDialog = new reason();
+                    testDialog.Show();
+                    testDialog.txtreason.Text = dataGridView3.CurrentRow.Cells["Remarks"].Value.ToString().Trim();
+                    testDialog.button1.Visible = false;
+                    testDialog.button2.Visible = false;
+                }
             }
         }
         public Image byteArrayToImage(byte[] bytesArr)
