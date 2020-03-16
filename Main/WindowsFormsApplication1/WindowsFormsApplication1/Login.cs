@@ -15,6 +15,7 @@ namespace WindowsFormsApplication1
     public partial class Login : Form
     {
         string selectedDomain;
+        //string email;
         ConnectionString cs = new ConnectionString();
 
         public Login()
@@ -27,10 +28,19 @@ namespace WindowsFormsApplication1
             selectedDomain = comboBox1.Text;
         }
 
+        public string email
+        {
+            get
+            {
+                return textBox1.Text;
+            }
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             SqlConnection con = new SqlConnection(cs.DBConn);
             SqlCommand cmd = new SqlCommand("select * from Account where emailAddress=@email and password=@password and domain=@domain", con);
+            //email = textBox1.Text;
             cmd.Parameters.AddWithValue("@email", textBox1.Text);
             cmd.Parameters.AddWithValue("@password", textBox2.Text);
             cmd.Parameters.AddWithValue("@domain", selectedDomain);

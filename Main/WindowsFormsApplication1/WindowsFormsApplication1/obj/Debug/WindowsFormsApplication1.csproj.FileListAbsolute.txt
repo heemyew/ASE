@@ -42,3 +42,5 @@ C:\Users\Racheal\Desktop\Y2S2\ASE\ASE\Main\WindowsFormsApplication1\WindowsForms
 C:\Users\Racheal\Desktop\Y2S2\ASE\ASE\Main\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
 C:\Users\Racheal\Desktop\Y2S2\ASE\ASE\Main\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
 C:\Users\Racheal\Desktop\Y2S2\ASE\ASE\Main\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Login.resources
+C:\Users\Racheal\Desktop\Y2S2\ASE\ASE\Main\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.StaffWeb.resources
+C:\Users\Racheal\Desktop\Y2S2\ASE\ASE\Main\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.TakeAttendace.resources
