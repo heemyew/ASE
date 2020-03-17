@@ -24,3 +24,4 @@ C:\Users\Racheal\Desktop\Y2S2\ASE\ASE\ASE-51088f882d595fb52f1ab285192ec2c4efe957
 C:\Users\Racheal\Desktop\Y2S2\ASE\ASE\ASE-51088f882d595fb52f1ab285192ec2c4efe95724\Main\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
 C:\Users\Racheal\Desktop\Y2S2\ASE\ASE\ASE-51088f882d595fb52f1ab285192ec2c4efe95724\Main\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
 C:\Users\Racheal\Desktop\Y2S2\ASE\ASE\ASE-51088f882d595fb52f1ab285192ec2c4efe95724\Main\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojAssemblyReference.cache
+C:\Users\Racheal\Desktop\Y2S2\ASE\ASE\ASE-51088f882d595fb52f1ab285192ec2c4efe95724\Main\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Admin.resources

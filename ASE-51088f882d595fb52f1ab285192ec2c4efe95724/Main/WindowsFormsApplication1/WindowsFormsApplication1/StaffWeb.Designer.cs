@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea27 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend27 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Title title27 = new System.Windows.Forms.DataVisualization.Charting.Title();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea28 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend28 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Title title28 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea9 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend9 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Title title9 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea10 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend10 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Title title10 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -58,6 +58,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.panel3 = new System.Windows.Forms.Panel();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -66,20 +67,12 @@
             this.label5 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.txtId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtcc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtMatri = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtScore = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtWeightage = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.dataGridView2 = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.txtMatriNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.txtName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -91,12 +84,10 @@
             this.panel5.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel3.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.tabPage4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
             // 
             // tabPage2
@@ -127,35 +118,35 @@
             // 
             // chart2
             // 
-            chartArea27.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea27);
-            legend27.Name = "Legend1";
-            this.chart2.Legends.Add(legend27);
+            chartArea9.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea9);
+            legend9.Name = "Legend1";
+            this.chart2.Legends.Add(legend9);
             this.chart2.Location = new System.Drawing.Point(578, 92);
             this.chart2.Name = "chart2";
             this.chart2.Size = new System.Drawing.Size(514, 323);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
-            title27.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            title27.Name = "Title1";
-            title27.Text = "Total Lesson Attended against Grade Scored";
-            this.chart2.Titles.Add(title27);
+            title9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            title9.Name = "Title1";
+            title9.Text = "Total Lesson Attended against Grade Scored";
+            this.chart2.Titles.Add(title9);
             // 
             // chart1
             // 
-            chartArea28.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea28);
-            legend28.Name = "Legend1";
-            this.chart1.Legends.Add(legend28);
+            chartArea10.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea10);
+            legend10.Name = "Legend1";
+            this.chart1.Legends.Add(legend10);
             this.chart1.Location = new System.Drawing.Point(30, 92);
             this.chart1.Name = "chart1";
             this.chart1.Size = new System.Drawing.Size(542, 300);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
-            title28.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            title28.Name = "title1";
-            title28.Text = "Grade distribution by Lab Group";
-            this.chart1.Titles.Add(title28);
+            title10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            title10.Name = "title1";
+            title10.Text = "Grade distribution by Lab Group";
+            this.chart1.Titles.Add(title10);
             // 
             // button6
             // 
@@ -355,7 +346,6 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -375,6 +365,24 @@
             this.tabPage3.TabIndex = 1;
             this.tabPage3.Text = "Manage Student Grades";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.txtId,
+            this.txtcc,
+            this.txtMatri,
+            this.txtTotal,
+            this.txtScore,
+            this.txtWeightage});
+            this.dataGridView1.Location = new System.Drawing.Point(108, 182);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowHeadersWidth = 51;
+            this.dataGridView1.RowTemplate.Height = 24;
+            this.dataGridView1.Size = new System.Drawing.Size(866, 273);
+            this.dataGridView1.TabIndex = 23;
+            this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
             // 
             // panel3
             // 
@@ -459,22 +467,14 @@
             this.label3.TabIndex = 0;
             this.label3.Text = "Student Grade";
             // 
-            // dataGridView1
+            // txtId
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.txtcc,
-            this.txtMatri,
-            this.txtTotal,
-            this.txtScore,
-            this.txtWeightage});
-            this.dataGridView1.Location = new System.Drawing.Point(108, 182);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowHeadersWidth = 51;
-            this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(866, 273);
-            this.dataGridView1.TabIndex = 23;
-            this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
+            this.txtId.DataPropertyName = "id";
+            this.txtId.HeaderText = "ID";
+            this.txtId.MinimumWidth = 6;
+            this.txtId.Name = "txtId";
+            this.txtId.Visible = false;
+            this.txtId.Width = 125;
             // 
             // txtcc
             // 
@@ -482,13 +482,14 @@
             this.txtcc.HeaderText = "Course Code";
             this.txtcc.MinimumWidth = 6;
             this.txtcc.Name = "txtcc";
+            this.txtcc.ReadOnly = true;
             this.txtcc.Width = 125;
             // 
             // txtMatri
             // 
             this.txtMatri.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.txtMatri.DataPropertyName = "MatriCardNo";
-            this.txtMatri.HeaderText = "Matri Number";
+            this.txtMatri.HeaderText = "Matric Number";
             this.txtMatri.MinimumWidth = 6;
             this.txtMatri.Name = "txtMatri";
             // 
@@ -516,79 +517,6 @@
             this.txtWeightage.Name = "txtWeightage";
             this.txtWeightage.Width = 125;
             // 
-            // tabPage4
-            // 
-            this.tabPage4.Controls.Add(this.dataGridView2);
-            this.tabPage4.Location = new System.Drawing.Point(4, 25);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(1178, 531);
-            this.tabPage4.TabIndex = 2;
-            this.tabPage4.Text = "Grades";
-            this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // dataGridView2
-            // 
-            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn1,
-            this.txtMatriNo,
-            this.txtName,
-            this.dataGridViewTextBoxColumn3,
-            this.dataGridViewTextBoxColumn4,
-            this.dataGridViewTextBoxColumn5});
-            this.dataGridView2.Location = new System.Drawing.Point(8, 77);
-            this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.RowHeadersWidth = 51;
-            this.dataGridView2.RowTemplate.Height = 24;
-            this.dataGridView2.Size = new System.Drawing.Size(972, 273);
-            this.dataGridView2.TabIndex = 24;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "CourseCode";
-            this.dataGridViewTextBoxColumn1.HeaderText = "Course Code";
-            this.dataGridViewTextBoxColumn1.MinimumWidth = 6;
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.Width = 125;
-            // 
-            // txtMatriNo
-            // 
-            this.txtMatriNo.HeaderText = "Matri Number";
-            this.txtMatriNo.MinimumWidth = 6;
-            this.txtMatriNo.Name = "txtMatriNo";
-            this.txtMatriNo.Width = 125;
-            // 
-            // txtName
-            // 
-            this.txtName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.txtName.HeaderText = "Student Name";
-            this.txtName.MinimumWidth = 6;
-            this.txtName.Name = "txtName";
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            this.dataGridViewTextBoxColumn3.DataPropertyName = "OverallScore";
-            this.dataGridViewTextBoxColumn3.HeaderText = "Total Marks";
-            this.dataGridViewTextBoxColumn3.MinimumWidth = 6;
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            this.dataGridViewTextBoxColumn3.Width = 125;
-            // 
-            // dataGridViewTextBoxColumn4
-            // 
-            this.dataGridViewTextBoxColumn4.DataPropertyName = "sScore";
-            this.dataGridViewTextBoxColumn4.HeaderText = "Student\'s Score";
-            this.dataGridViewTextBoxColumn4.MinimumWidth = 6;
-            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-            this.dataGridViewTextBoxColumn4.Width = 125;
-            // 
-            // dataGridViewTextBoxColumn5
-            // 
-            this.dataGridViewTextBoxColumn5.DataPropertyName = "Weightage";
-            this.dataGridViewTextBoxColumn5.HeaderText = "Weightage";
-            this.dataGridViewTextBoxColumn5.MinimumWidth = 6;
-            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
-            this.dataGridViewTextBoxColumn5.Width = 125;
-            // 
             // StaffWeb
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -613,15 +541,13 @@
             this.panel5.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.tabPage4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -660,18 +586,11 @@
         private System.Windows.Forms.DataGridView dataGridView3;
         private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn txtId;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtcc;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtMatri;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtTotal;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtScore;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtWeightage;
-        private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.DataGridView dataGridView2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn txtMatriNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn txtName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
     }
 }

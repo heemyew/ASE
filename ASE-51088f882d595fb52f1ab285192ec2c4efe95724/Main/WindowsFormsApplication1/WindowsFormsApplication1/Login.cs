@@ -70,15 +70,14 @@ namespace WindowsFormsApplication1
                     }
                     else
                     {
-                        Main mainPage = new Main();
-                        mainPage.Show();
+                        StaffWeb sw = new StaffWeb();
+                        sw.Show();
                     }
                 }
 
             }
             else
             {
-
                 MessageBox.Show("Please enter Correct Username and Password");
             }
         }

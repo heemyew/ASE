@@ -502,28 +502,15 @@ namespace WindowsFormsApplication1
             populateStudentGrade();
         }
 
-        void pop()
-        {
-            //https://www.youtube.com/watch?v=0flYZTNE7RU
-            using (SqlConnection con = new SqlConnection(cs.DBConn))
-            {
-                con.Open();
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Student.Name, StudentGrade.MatriCardNo, StudentGrade.CourseCode, StudentGrade.sScore, StudentGrade.OverallScore, StudentGrade.Weightage FROM StudentGrade, Student WHERE StudentGrade.MatriCardNo = Student.MatriCardNo", con);
-                //SqlDataAdapter adapter = new SqlDataAdapter("SELECT MatriCardNo, CourseCode, OverallScore, sScore, Weightage FROM StudentGrade", con);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
-                dataGridView2.DataSource = dt;
-            }
-        }
-
         void populateStudentGrade()
         {
             using (SqlConnection con = new SqlConnection(cs.DBConn))
             {
                 con.Open();
                 //SqlDataAdapter adapter = new SqlDataAdapter("SELECT Student.Name, StudentGrade.MatriCardNo, StudentGrade.CourseCode, StudentGrade.sScore, StudentGrade.OverallScore, StudentGrade.Weightage FROM StudentGrade, Student WHERE StudentGrade.MatriCardNo = Student.MatriCardNo", con);
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT MatriCardNo, CourseCode, OverallScore, sScore, Weightage FROM StudentGrade", con);
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT id,MatriCardNo, CourseCode, OverallScore, sScore, Weightage FROM StudentGrade", con);
                 DataTable dt = new DataTable();
+
                 adapter.Fill(dt);
                 dataGridView1.DataSource = dt;
             }
@@ -533,25 +520,30 @@ namespace WindowsFormsApplication1
         {
             if (dataGridView1.CurrentRow != null)
             {
-                //https://www.youtube.com/watch?v=cQQy_IfFddg
-                using (SqlConnection con = new SqlConnection(cs.DBConn))
+                DataGridViewRow row = dataGridView1.CurrentRow;
+                string a = row.Cells[0].Value.ToString().Trim();
+                if (row.Cells[0].Value.ToString().Trim() == "")
                 {
-                    con.Open();
-                    DataGridViewRow row = dataGridView1.CurrentRow;
-                    SqlCommand cmd = new SqlCommand("INSERT INTO StudentGrade(MatriCardNo,CourseCode,OverallScore,sScore,Weightage) VALUES (@matri, @cc, @overall, @score, @weightage)", con);
-                    //cmd.CommandType = CommandType.StoredProcedure;
-                    if (row.Cells["txtMatri"].Value == DBNull.Value)
-                        cmd.Parameters.AddWithValue("@matri", "");
-                    else
+                    using (SqlConnection con = new SqlConnection(cs.DBConn))
                     {
-                        cmd.Parameters.AddWithValue("@matri", txtMatri.ToString());
-                        cmd.Parameters.AddWithValue("@cc", txtcc.ToString());
-                        cmd.Parameters.AddWithValue("@overall", Convert.ToInt32(row.Cells["txtScore"].Value == DBNull.Value ? "0" : row.Cells["txtTotal"].Value.ToString())) ;
-                        cmd.Parameters.AddWithValue("@score", Convert.ToInt32(row.Cells["txtScore"].Value == DBNull.Value ? "0" : row.Cells["txtScore"].Value.ToString()));
-                        cmd.Parameters.AddWithValue("@weightage", Convert.ToInt32(row.Cells["txtScore"].Value == DBNull.Value ? "0" : row.Cells["txtWeightage"].Value.ToString()));
-                        cmd.ExecuteNonQuery();
-                        populateStudentGrade();
+                        con.Open();
+                        SqlCommand cmd = new SqlCommand("INSERT INTO StudentGrade(MatriCardNo,CourseCode,OverallScore,sScore,Weightage) VALUES (@matri, @cc, @overall, @score, @weightage)", con);
+                        //cmd.CommandType = CommandType.StoredProcedure;
+                        if (row.Cells["txtMatri"].Value != DBNull.Value && row.Cells["txtcc"].Value != DBNull.Value && row.Cells["txtTotal"].Value != DBNull.Value && row.Cells["txtScore"].Value != DBNull.Value && row.Cells["txtWeightage"].Value != DBNull.Value)
+                        {
+                            cmd.Parameters.AddWithValue("@matri", row.Cells["txtMatri"].Value.ToString());
+                            cmd.Parameters.AddWithValue("@cc", row.Cells["txtcc"].Value.ToString());
+                            cmd.Parameters.AddWithValue("@overall", Convert.ToInt32(row.Cells["txtTotal"].Value == DBNull.Value ? "0" : row.Cells["txtTotal"].Value.ToString()));
+                            cmd.Parameters.AddWithValue("@score", Convert.ToInt32(row.Cells["txtScore"].Value == DBNull.Value ? "0" : row.Cells["txtScore"].Value.ToString()));
+                            cmd.Parameters.AddWithValue("@weightage", Convert.ToInt32(row.Cells["txtWeightage"].Value == DBNull.Value ? "0" : row.Cells["txtWeightage"].Value.ToString()));
+                            cmd.ExecuteNonQuery();
+                            populateStudentGrade();
+                        }
                     }
+                }
+                else 
+                {
+                    
                 }
             }
         }
