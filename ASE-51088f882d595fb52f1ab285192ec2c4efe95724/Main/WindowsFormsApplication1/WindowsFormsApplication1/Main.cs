@@ -619,6 +619,17 @@ namespace WindowsFormsApplication1
             }
         }
 
+        private void lblName_Click(object sender, EventArgs e)
+        {
+            lblName.Text = "Welcome" + Login.personName;
+        }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            Login login = new Login();
+            login.Show();
+        }
+
         private void dataGridView3_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == 9)
