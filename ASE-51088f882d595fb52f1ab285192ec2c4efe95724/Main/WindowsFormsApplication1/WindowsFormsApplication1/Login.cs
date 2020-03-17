@@ -35,7 +35,6 @@ namespace WindowsFormsApplication1
             cmd.Parameters.AddWithValue("@password", textBox2.Text);
             cmd.Parameters.AddWithValue("@domain", selectedDomain);
             SqlDataAdapter sda = new SqlDataAdapter(cmd);
-
             DataTable dt = new DataTable();
             sda.Fill(dt);
             con.Open();

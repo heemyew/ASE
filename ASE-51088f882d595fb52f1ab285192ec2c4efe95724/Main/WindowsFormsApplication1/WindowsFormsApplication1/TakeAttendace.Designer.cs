@@ -71,7 +71,7 @@
             // imageBox1
             // 
             this.imageBox1.BackColor = System.Drawing.Color.Transparent;
-            this.imageBox1.Location = new System.Drawing.Point(191, 43);
+            this.imageBox1.Location = new System.Drawing.Point(191, 56);
             this.imageBox1.Name = "imageBox1";
             this.imageBox1.Size = new System.Drawing.Size(317, 217);
             this.imageBox1.TabIndex = 5;

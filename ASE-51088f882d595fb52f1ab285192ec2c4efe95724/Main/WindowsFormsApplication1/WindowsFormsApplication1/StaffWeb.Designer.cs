@@ -28,26 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea9 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend9 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Title title9 = new System.Windows.Forms.DataVisualization.Charting.Title();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea10 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend10 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Title title10 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.button6 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.dataGridView3 = new System.Windows.Forms.DataGridView();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.panel6 = new System.Windows.Forms.Panel();
             this.txtCourse = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -70,9 +65,11 @@
             this.txtId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtcc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtMatri = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txtName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtScore = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtWeightage = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.button3 = new System.Windows.Forms.Button();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -95,8 +92,6 @@
             this.tabPage2.Controls.Add(this.comboBox2);
             this.tabPage2.Controls.Add(this.chart2);
             this.tabPage2.Controls.Add(this.chart1);
-            this.tabPage2.Controls.Add(this.button6);
-            this.tabPage2.Controls.Add(this.button5);
             this.tabPage2.Controls.Add(this.button4);
             this.tabPage2.Controls.Add(this.panel1);
             this.tabPage2.Controls.Add(this.button3);
@@ -118,57 +113,39 @@
             // 
             // chart2
             // 
-            chartArea9.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea9);
-            legend9.Name = "Legend1";
-            this.chart2.Legends.Add(legend9);
-            this.chart2.Location = new System.Drawing.Point(578, 92);
+            chartArea1.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chart2.Legends.Add(legend1);
+            this.chart2.Location = new System.Drawing.Point(578, 117);
             this.chart2.Name = "chart2";
             this.chart2.Size = new System.Drawing.Size(514, 323);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
-            title9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            title9.Name = "Title1";
-            title9.Text = "Total Lesson Attended against Grade Scored";
-            this.chart2.Titles.Add(title9);
+            title1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            title1.Name = "Title1";
+            title1.Text = "Total Lesson Attended against Grade Scored";
+            this.chart2.Titles.Add(title1);
             // 
             // chart1
             // 
-            chartArea10.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea10);
-            legend10.Name = "Legend1";
-            this.chart1.Legends.Add(legend10);
-            this.chart1.Location = new System.Drawing.Point(30, 92);
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
+            this.chart1.Location = new System.Drawing.Point(30, 140);
             this.chart1.Name = "chart1";
             this.chart1.Size = new System.Drawing.Size(542, 300);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
-            title10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            title10.Name = "title1";
-            title10.Text = "Grade distribution by Lab Group";
-            this.chart1.Titles.Add(title10);
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(744, 436);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(195, 57);
-            this.button6.TabIndex = 4;
-            this.button6.Text = "Customize";
-            this.button6.UseVisualStyleBackColor = true;
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(320, 436);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(195, 57);
-            this.button5.TabIndex = 3;
-            this.button5.Text = "Forecasting";
-            this.button5.UseVisualStyleBackColor = true;
+            title2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            title2.Name = "title1";
+            title2.Text = "Grade distribution by Lab Group";
+            this.chart1.Titles.Add(title2);
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(533, 436);
+            this.button4.Location = new System.Drawing.Point(772, 446);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(195, 57);
             this.button4.TabIndex = 2;
@@ -194,20 +171,9 @@
             this.label1.TabIndex = 2;
             this.label1.Text = "Reports";
             // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(81, 436);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(195, 53);
-            this.button3.TabIndex = 0;
-            this.button3.Text = "Class Grade Distribution";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.dataGridView3);
-            this.tabPage1.Controls.Add(this.button2);
-            this.tabPage1.Controls.Add(this.button1);
             this.tabPage1.Controls.Add(this.panel6);
             this.tabPage1.Controls.Add(this.panel4);
             this.tabPage1.Controls.Add(this.panel5);
@@ -234,26 +200,6 @@
             this.dataGridView3.Size = new System.Drawing.Size(953, 289);
             this.dataGridView3.TabIndex = 23;
             this.dataGridView3.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellClick);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(897, 441);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(161, 42);
-            this.button2.TabIndex = 22;
-            this.button2.Text = "Marked As Absence";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.Color.Honeydew;
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(710, 441);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(161, 42);
-            this.button1.TabIndex = 21;
-            this.button1.Text = "Marked As Present";
-            this.button1.UseVisualStyleBackColor = false;
             // 
             // panel6
             // 
@@ -373,6 +319,7 @@
             this.txtId,
             this.txtcc,
             this.txtMatri,
+            this.txtName,
             this.txtTotal,
             this.txtScore,
             this.txtWeightage});
@@ -380,7 +327,7 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(866, 273);
+            this.dataGridView1.Size = new System.Drawing.Size(955, 273);
             this.dataGridView1.TabIndex = 23;
             this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
             // 
@@ -482,16 +429,24 @@
             this.txtcc.HeaderText = "Course Code";
             this.txtcc.MinimumWidth = 6;
             this.txtcc.Name = "txtcc";
-            this.txtcc.ReadOnly = true;
             this.txtcc.Width = 125;
             // 
             // txtMatri
             // 
-            this.txtMatri.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.txtMatri.DataPropertyName = "MatriCardNo";
             this.txtMatri.HeaderText = "Matric Number";
             this.txtMatri.MinimumWidth = 6;
             this.txtMatri.Name = "txtMatri";
+            this.txtMatri.Width = 125;
+            // 
+            // txtName
+            // 
+            this.txtName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.txtName.DataPropertyName = "name";
+            this.txtName.HeaderText = "Student Name";
+            this.txtName.MinimumWidth = 6;
+            this.txtName.Name = "txtName";
+            this.txtName.ReadOnly = true;
             // 
             // txtTotal
             // 
@@ -516,6 +471,15 @@
             this.txtWeightage.MinimumWidth = 6;
             this.txtWeightage.Name = "txtWeightage";
             this.txtWeightage.Width = 125;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(184, 450);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(195, 53);
+            this.button3.TabIndex = 0;
+            this.button3.Text = "Class Grade Distribution";
+            this.button3.UseVisualStyleBackColor = true;
             // 
             // StaffWeb
             // 
@@ -555,8 +519,6 @@
         #endregion
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
         internal System.Windows.Forms.Panel panel6;
         internal System.Windows.Forms.TextBox txtCourse;
         internal System.Windows.Forms.Label label2;
@@ -567,9 +529,6 @@
         internal System.Windows.Forms.Label label8;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
@@ -589,8 +548,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn txtId;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtcc;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtMatri;
+        private System.Windows.Forms.DataGridViewTextBoxColumn txtName;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtTotal;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtScore;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtWeightage;
+        private System.Windows.Forms.Button button3;
     }
 }

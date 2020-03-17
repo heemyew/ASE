@@ -186,15 +186,17 @@ namespace WindowsFormsApplication1
 
             ds.Tables.Add(dt);
             chart1.DataSource = ds;
-            //chart1.Series.Add(new Series("Grade"));
-            //chart1.Series[0].XValueMember = "weightedScore";
-            //chart1.Series[0].YValueMembers = "CountGrade";
-            //chart1.ChartAreas[0].AxisX.Title = "Grade";
-            //chart1.ChartAreas[0].AxisY.Title = "Number of Student";
-            //chart1.DataBind();
+            chart1.Series.Clear();
+            chart1.Series.Add(new Series("Grade"));
+            chart1.Series[0].XValueMember = "weightedScore";
+            chart1.Series[0].YValueMembers = "CountGrade";
+            chart1.ChartAreas[0].AxisX.Title = "Grade";
+            chart1.ChartAreas[0].AxisY.Title = "Number of Student";
+            chart1.DataBind();
         }
 
         public void bindchart2(){
+            chart2.Series.Clear();
             SqlConnection con = new SqlConnection(cs.DBConn);
             SqlCommand cmd = null;
             con.Open();
@@ -217,6 +219,7 @@ namespace WindowsFormsApplication1
             cmd.Parameters.AddWithValue("@staffid", LoginInfo.StaffID);
             DataSet ds = new DataSet();
             DataTable dt = new DataTable("MyTable");
+            dt.Columns.Add("TotalAttendanceCount", typeof(System.Double));
             dt.Columns.Add("TotalGradeCount", typeof(System.Double));
 
             SqlDataReader reader2 = cmd.ExecuteReader();
@@ -246,17 +249,17 @@ namespace WindowsFormsApplication1
             foreach (DataRow row in dt.Rows)
             {
                 int rowToCheck = -1;
-                if (row[1].ToString().Trim() == "A+") { rowToCheck = 0; }
-                if (row[1].ToString().Trim() == "A") { rowToCheck = 1; }
-                if (row[1].ToString().Trim() == "A-") { rowToCheck = 2; }
-                if (row[1].ToString().Trim() == "B+") { rowToCheck = 3; }
-                if (row[1].ToString().Trim() == "B") { rowToCheck = 4; }
-                if (row[1].ToString().Trim() == "B-") { rowToCheck = 5; }
-                if (row[1].ToString().Trim() == "C+") { rowToCheck = 6; }
-                if (row[1].ToString().Trim() == "C") { rowToCheck = 7; }
-                if (row[1].ToString().Trim() == "C-") { rowToCheck = 8; }
-                if (row[1].ToString().Trim() == "D") { rowToCheck = 9; }
-                if (row[1].ToString().Trim() == "F") { rowToCheck = 10; }
+                if (row[2].ToString().Trim() == "A+") { rowToCheck = 0; }
+                if (row[2].ToString().Trim() == "A") { rowToCheck = 1; }
+                if (row[2].ToString().Trim() == "A-") { rowToCheck = 2; }
+                if (row[2].ToString().Trim() == "B+") { rowToCheck = 3; }
+                if (row[2].ToString().Trim() == "B") { rowToCheck = 4; }
+                if (row[2].ToString().Trim() == "B-") { rowToCheck = 5; }
+                if (row[2].ToString().Trim() == "C+") { rowToCheck = 6; }
+                if (row[2].ToString().Trim() == "C") { rowToCheck = 7; }
+                if (row[2].ToString().Trim() == "C-") { rowToCheck = 8; }
+                if (row[2].ToString().Trim() == "D") { rowToCheck = 9; }
+                if (row[2].ToString().Trim() == "F") { rowToCheck = 10; }
                 colTocheck = Int32.Parse(row[0].ToString().Trim());
                 data[rowToCheck, colTocheck] = 1;
             }
@@ -323,8 +326,6 @@ namespace WindowsFormsApplication1
                         break;
                     }
                 }
-                
-
             }
             
             chart2.ChartAreas[0].AxisX.Title = "Total Lesson Attended";
@@ -347,7 +348,6 @@ namespace WindowsFormsApplication1
 
                 while (reader.Read())
                 {
-                    //Help fix https://www.youtube.com/watch?v=cdkDHkXyVFI
                     string index = reader["index"].ToString();
                     comboBox1.Items.Add(index);
                     comboBox2.Items.Add(index);
@@ -494,7 +494,7 @@ namespace WindowsFormsApplication1
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             bindchart();
-            bindchart();
+            bindchart2();
         }
 
         private void StaffWeb_Load(object sender, EventArgs e)
@@ -507,10 +507,9 @@ namespace WindowsFormsApplication1
             using (SqlConnection con = new SqlConnection(cs.DBConn))
             {
                 con.Open();
-                //SqlDataAdapter adapter = new SqlDataAdapter("SELECT Student.Name, StudentGrade.MatriCardNo, StudentGrade.CourseCode, StudentGrade.sScore, StudentGrade.OverallScore, StudentGrade.Weightage FROM StudentGrade, Student WHERE StudentGrade.MatriCardNo = Student.MatriCardNo", con);
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT id,MatriCardNo, CourseCode, OverallScore, sScore, Weightage FROM StudentGrade", con);
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Student.Name, StudentGrade.MatriCardNo, StudentGrade.CourseCode, StudentGrade.sScore, StudentGrade.OverallScore, StudentGrade.Weightage FROM StudentGrade, Student WHERE StudentGrade.MatriCardNo = Student.MatriCardNo", con);
+                //SqlDataAdapter adapter = new SqlDataAdapter("SELECT id,MatriCardNo, CourseCode, OverallScore, sScore, Weightage FROM StudentGrade", con);
                 DataTable dt = new DataTable();
-
                 adapter.Fill(dt);
                 dataGridView1.DataSource = dt;
             }
@@ -528,7 +527,6 @@ namespace WindowsFormsApplication1
                     {
                         con.Open();
                         SqlCommand cmd = new SqlCommand("INSERT INTO StudentGrade(MatriCardNo,CourseCode,OverallScore,sScore,Weightage) VALUES (@matri, @cc, @overall, @score, @weightage)", con);
-                        //cmd.CommandType = CommandType.StoredProcedure;
                         if (row.Cells["txtMatri"].Value != DBNull.Value && row.Cells["txtcc"].Value != DBNull.Value && row.Cells["txtTotal"].Value != DBNull.Value && row.Cells["txtScore"].Value != DBNull.Value && row.Cells["txtWeightage"].Value != DBNull.Value)
                         {
                             cmd.Parameters.AddWithValue("@matri", row.Cells["txtMatri"].Value.ToString());
@@ -543,7 +541,22 @@ namespace WindowsFormsApplication1
                 }
                 else 
                 {
-                    
+                    using (SqlConnection con = new SqlConnection(cs.DBConn))
+                    {
+                        con.Open();
+                        SqlCommand cmd = new SqlCommand("UPDATE StudentGrade SET MatriCardNo=@matri, CourseCode=@cc, OverallScore=@overall, sScore=@score, Weightage=@weightage WHERE id=@id", con);
+                        if (row.Cells["txtMatri"].Value != DBNull.Value && row.Cells["txtcc"].Value != DBNull.Value && row.Cells["txtTotal"].Value != DBNull.Value && row.Cells["txtScore"].Value != DBNull.Value && row.Cells["txtWeightage"].Value != DBNull.Value)
+                        {
+                            cmd.Parameters.AddWithValue("@matri", row.Cells["txtMatri"].Value.ToString());
+                            cmd.Parameters.AddWithValue("@cc", row.Cells["txtcc"].Value.ToString());
+                            cmd.Parameters.AddWithValue("@overall", Convert.ToInt32(row.Cells["txtTotal"].Value == DBNull.Value ? "0" : row.Cells["txtTotal"].Value.ToString()));
+                            cmd.Parameters.AddWithValue("@score", Convert.ToInt32(row.Cells["txtScore"].Value == DBNull.Value ? "0" : row.Cells["txtScore"].Value.ToString()));
+                            cmd.Parameters.AddWithValue("@weightage", Convert.ToInt32(row.Cells["txtWeightage"].Value == DBNull.Value ? "0" : row.Cells["txtWeightage"].Value.ToString()));
+                            cmd.Parameters.AddWithValue("@id", a);
+                            cmd.ExecuteNonQuery();
+                            populateStudentGrade();
+                        }
+                    }
                 }
             }
         }
