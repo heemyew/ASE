@@ -75,6 +75,8 @@
             this.panel8 = new System.Windows.Forms.Panel();
             this.label13 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.lblName = new System.Windows.Forms.Label();
+            this.btnLogout = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -110,6 +112,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.lblName);
+            this.tabPage1.Controls.Add(this.btnLogout);
             this.tabPage1.Controls.Add(this.panel1);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
@@ -464,7 +468,7 @@
             // radioButton5
             // 
             this.radioButton5.AutoSize = true;
-            this.radioButton5.Location = new System.Drawing.Point(116, 147);
+            this.radioButton5.Location = new System.Drawing.Point(323, 106);
             this.radioButton5.Name = "radioButton5";
             this.radioButton5.Size = new System.Drawing.Size(90, 21);
             this.radioButton5.TabIndex = 34;
@@ -475,7 +479,7 @@
             // 
             this.radioButton4.AutoSize = true;
             this.radioButton4.Checked = true;
-            this.radioButton4.Location = new System.Drawing.Point(29, 147);
+            this.radioButton4.Location = new System.Drawing.Point(182, 106);
             this.radioButton4.Name = "radioButton4";
             this.radioButton4.Size = new System.Drawing.Size(81, 21);
             this.radioButton4.TabIndex = 33;
@@ -486,7 +490,7 @@
             // button8
             // 
             this.button8.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button8.Location = new System.Drawing.Point(1076, 135);
+            this.button8.Location = new System.Drawing.Point(459, 106);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(83, 33);
             this.button8.TabIndex = 32;
@@ -590,6 +594,27 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // lblName
+            // 
+            this.lblName.AutoSize = true;
+            this.lblName.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblName.Location = new System.Drawing.Point(893, 29);
+            this.lblName.Name = "lblName";
+            this.lblName.Size = new System.Drawing.Size(167, 20);
+            this.lblName.TabIndex = 12;
+            this.lblName.Text = "Welcome, USERXXX";
+            this.lblName.Click += new System.EventHandler(this.lblName_Click);
+            // 
+            // btnLogout
+            // 
+            this.btnLogout.Location = new System.Drawing.Point(1082, 12);
+            this.btnLogout.Name = "btnLogout";
+            this.btnLogout.Size = new System.Drawing.Size(90, 57);
+            this.btnLogout.TabIndex = 11;
+            this.btnLogout.Text = "Log out";
+            this.btnLogout.UseVisualStyleBackColor = true;
+            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -600,6 +625,7 @@
             this.Text = "Lab Technician View";
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -678,6 +704,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn txtExtraReason;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtStatus;
         private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Label lblName;
+        private System.Windows.Forms.Button btnLogout;
     }
 }
 

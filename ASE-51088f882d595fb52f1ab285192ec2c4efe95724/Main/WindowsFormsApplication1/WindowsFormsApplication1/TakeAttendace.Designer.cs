@@ -49,6 +49,8 @@
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
+            this.lblName = new System.Windows.Forms.Label();
+            this.btnLogout = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.imageBox1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -60,7 +62,7 @@
             // 
             this.button2.BackColor = System.Drawing.Color.Transparent;
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(261, 290);
+            this.button2.Location = new System.Drawing.Point(259, 345);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(170, 34);
             this.button2.TabIndex = 6;
@@ -71,7 +73,7 @@
             // imageBox1
             // 
             this.imageBox1.BackColor = System.Drawing.Color.Transparent;
-            this.imageBox1.Location = new System.Drawing.Point(191, 43);
+            this.imageBox1.Location = new System.Drawing.Point(189, 98);
             this.imageBox1.Name = "imageBox1";
             this.imageBox1.Size = new System.Drawing.Size(317, 217);
             this.imageBox1.TabIndex = 5;
@@ -89,6 +91,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.lblName);
+            this.tabPage1.Controls.Add(this.btnLogout);
             this.tabPage1.Controls.Add(this.imageBox1);
             this.tabPage1.Controls.Add(this.button2);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
@@ -270,6 +274,27 @@
             this.label10.TabIndex = 42;
             this.label10.Text = "Start Date:";
             // 
+            // lblName
+            // 
+            this.lblName.AutoSize = true;
+            this.lblName.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblName.Location = new System.Drawing.Point(443, 33);
+            this.lblName.Name = "lblName";
+            this.lblName.Size = new System.Drawing.Size(167, 20);
+            this.lblName.TabIndex = 12;
+            this.lblName.Text = "Welcome, USERXXX";
+            this.lblName.Click += new System.EventHandler(this.lblName_Click);
+            // 
+            // btnLogout
+            // 
+            this.btnLogout.Location = new System.Drawing.Point(632, 16);
+            this.btnLogout.Name = "btnLogout";
+            this.btnLogout.Size = new System.Drawing.Size(90, 57);
+            this.btnLogout.TabIndex = 11;
+            this.btnLogout.Text = "Log out";
+            this.btnLogout.UseVisualStyleBackColor = true;
+            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
+            // 
             // TakeAttendace
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -281,6 +306,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.imageBox1)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.panel7.ResumeLayout(false);
@@ -311,5 +337,7 @@
         internal System.Windows.Forms.Label label11;
         internal System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label lblName;
+        private System.Windows.Forms.Button btnLogout;
     }
 }

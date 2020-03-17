@@ -16,6 +16,7 @@ namespace WindowsFormsApplication1
     {
         string selectedDomain;
         ConnectionString cs = new ConnectionString();
+        public static string personName;
 
         public Login()
         {
@@ -36,11 +37,14 @@ namespace WindowsFormsApplication1
             cmd.Parameters.AddWithValue("@domain", selectedDomain);
             SqlDataAdapter sda = new SqlDataAdapter(cmd);
 
+           
+           
+
             DataTable dt = new DataTable();
             sda.Fill(dt);
             con.Open();
             int i = cmd.ExecuteNonQuery();
-            //con.Close();
+            con.Close();
             SqlCommand scmd = new SqlCommand("select * from Staff where email='" + textBox1.Text + "'", con);
             string position ="";
             SqlDataReader reader = scmd.ExecuteReader();
@@ -48,6 +52,10 @@ namespace WindowsFormsApplication1
                 while (reader.Read()) {
                     LoginInfo.StaffID = reader[0].ToString();
                     LoginInfo.Name = reader[1].ToString();
+                    
+                    //this
+                    personName = LoginInfo.Name;
+
                     LoginInfo.Email = reader[2].ToString();
                     position = reader[5].ToString();
                 }
@@ -70,14 +78,15 @@ namespace WindowsFormsApplication1
                     }
                     else
                     {
-                        StaffWeb sw = new StaffWeb();
-                        sw.Show();
+                        StaffWeb staffWeb = new StaffWeb();
+                        staffWeb.Show();
                     }
                 }
 
             }
             else
             {
+
                 MessageBox.Show("Please enter Correct Username and Password");
             }
         }

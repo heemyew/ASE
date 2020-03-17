@@ -345,5 +345,16 @@ namespace WindowsFormsApplication1
                 MessageBox.Show("Cannot apply for LOA on the date itself or earlier");
             }
         }
+
+        private void lblName_Click(object sender, EventArgs e)
+        {
+            lblName.Text = "Welcome" + Login.personName;
+        }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            Login login = new Login();
+            login.Show();
+        }
     }
 }
